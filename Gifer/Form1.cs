@@ -1,6 +1,7 @@
 ﻿using mrousavy;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -37,6 +38,9 @@ namespace Gifer {
       if (!result.Success) {
         MessageBox.Show("Failed!", "Conversion");
       }
+      StringCollection resultList = new StringCollection();
+      resultList.Add(resultPath);
+      Clipboard.SetFileDropList(resultList);
     }
 
     int start = -1;
