@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gifer", "Gifer\Gifer.csproj", "{FD1CD230-2833-408E-B8AB-E07BF4C6D816}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FD1CD230-2833-408E-B8AB-E07BF4C6D816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD1CD230-2833-408E-B8AB-E07BF4C6D816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD1CD230-2833-408E-B8AB-E07BF4C6D816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD1CD230-2833-408E-B8AB-E07BF4C6D816}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EA2A5159-EFCE-4267-AAA9-516011F8E6A5}
+	EndGlobalSection
+EndGlobal
