@@ -25,17 +25,21 @@ namespace Gifer {
   class MPCAPI : VideoPlayerAPI {
     public PlayerState GetPlayerState() {
       HttpClient httpClient = new HttpClient();
-      var response = httpClient.GetAsync("http://localhost:13579/status.html").Result;
-      if (response.IsSuccessStatusCode) {
-        var content = response.Content.ReadAsStringAsync().Result.Replace("\"", "'");
-        Regex matcher = new Regex("OnStatus\\('.*', '(.*)', (\\d+), '.*', \\d+, '.*', \\d+, \\d+, '(.*)'\\)");
-        var match = matcher.Match(content);
-        var position = match.Groups[2].Value;
-        var state = match.Groups[1].Value;
-        var filePath = match.Groups[3].Value;
-        return new PlayerState(filePath, int.Parse(position), state);
+      try {
+        var response = httpClient.GetAsync("http://localhost:13579/status.html").Result;
+        if (response.IsSuccessStatusCode) {
+          var content = response.Content.ReadAsStringAsync().Result.Replace("\"", "'");
+          Regex matcher = new Regex("OnStatus\\('.*', '(.*)', (\\d+), '.*', \\d+, '.*', \\d+, \\d+, '(.*)'\\)");
+          var match = matcher.Match(content);
+          var position = match.Groups[2].Value;
+          var state = match.Groups[1].Value;
+          var filePath = match.Groups[3].Value;
+          return new PlayerState(filePath, int.Parse(position), state);
+        }
+        return new PlayerState("", -1, "");
+      } catch (Exception) {
+        return new PlayerState("", -1, "");
       }
-      throw new AccessViolationException();
     }
   }
 }
