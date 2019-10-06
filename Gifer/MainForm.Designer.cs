@@ -1,6 +1,6 @@
 ﻿namespace Gifer
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
       this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
       this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
       this.trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,14 +57,14 @@
       this.quitToolStripMenuItem.Text = "Quit";
       this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
       // 
-      // Form1
+      // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(800, 450);
-      this.Name = "Form1";
+      this.Name = "MainForm";
       this.Text = "Form1";
-      this.VisibleChanged += new System.EventHandler(this.Form1_VisibleChanged);
+      this.VisibleChanged += new System.EventHandler(this.MainForm_VisibleChanged);
       this.trayMenu.ResumeLayout(false);
       this.ResumeLayout(false);
 

@@ -8,12 +8,12 @@ using System.Windows.Input;
 using Xabe.FFmpeg;
 
 namespace Gifer {
-  public partial class Form1 : Form {
+  public partial class MainForm : Form {
 
     [DllImport("user32.dll")]
     public static extern bool RegisterHotKey(IntPtr hWnd, int id, System.Windows.Input.ModifierKeys fsModifiers, int vlc);
 
-    public Form1() {
+    public MainForm() {
       InitializeComponent();
       RegisterHotKey(Handle, 1, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.A));
       RegisterHotKey(Handle, 2, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.S));
@@ -96,7 +96,7 @@ namespace Gifer {
       Application.Exit();
     }
 
-    private void Form1_VisibleChanged(object sender, EventArgs e) {
+    private void MainForm_VisibleChanged(object sender, EventArgs e) {
       Visible = false;
     }
   }
