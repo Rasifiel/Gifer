@@ -38,6 +38,7 @@
       // 
       // trayIcon
       // 
+      this.trayIcon.ContextMenuStrip = this.trayMenu;
       this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
       this.trayIcon.Text = "Gifer";
       this.trayIcon.Visible = true;
@@ -64,7 +65,7 @@
       this.ClientSize = new System.Drawing.Size(800, 450);
       this.Name = "MainForm";
       this.Text = "Form1";
-      this.VisibleChanged += new System.EventHandler(this.MainForm_VisibleChanged);
+      this.VisibleChanged += new System.EventHandler(this.Form1_VisibleChanged);
       this.trayMenu.ResumeLayout(false);
       this.ResumeLayout(false);
 
