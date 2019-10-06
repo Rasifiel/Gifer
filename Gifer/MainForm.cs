@@ -48,13 +48,12 @@ namespace Gifer {
     int start = -1;
     int end = -1;
     String fileName = "";
-    VideoPlayerAPI api = new MPCAPI();
 
     protected override void WndProc(ref Message m) {
       if (m.Msg == 0x0312) {
         switch (m.WParam.ToInt32()) {
           case 1: {
-              PlayerState state = api.GetPlayerState();
+              PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
               if (state.position == -1) {
                 trayIcon.ShowBalloonTip(4000, "", "Can't connect to video player", ToolTipIcon.Error);
               } else {
@@ -68,7 +67,7 @@ namespace Gifer {
             }
             break;
           case 2: {
-              PlayerState state = api.GetPlayerState();
+              PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
               if (state.position == -1) {
                 trayIcon.ShowBalloonTip(4000, "", "Can't connect to video player", ToolTipIcon.Error);
               } else {
@@ -96,8 +95,35 @@ namespace Gifer {
       Application.Exit();
     }
 
-    private void MainForm_VisibleChanged(object sender, EventArgs e) {
-      Visible = false;
+    private void MPCRadioButton_CheckedChanged(object sender, EventArgs e) {
+      if (MPCRadioButton.Checked) {
+        Configuration.CurrentPlayer = VideoPlayer.MPC;
+      }
+    }
+
+    private void VLCRadioButton_CheckedChanged(object sender, EventArgs e) {
+      if (VLCRadioButton.Checked) {
+        Configuration.CurrentPlayer = VideoPlayer.VLC;
+      }
+    }
+
+    private void MainForm_Load(object sender, EventArgs e) {
+      if (Configuration.CurrentPlayer == VideoPlayer.MPC) {
+        MPCRadioButton.Checked = true;
+      } else {
+        VLCRadioButton.Checked = true;
+      }
+    }
+
+    private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+      if (e.CloseReason == CloseReason.UserClosing) {
+        Hide();
+        e.Cancel = true;
+      }
+    }
+
+    private void trayIcon_MouseDoubleClick(object sender, MouseEventArgs e) {
+      Show();
     }
   }
 }

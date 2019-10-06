@@ -22,5 +22,29 @@ namespace Gifer.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ActivePlayer {
+            get {
+                return ((int)(this["ActivePlayer"]));
+            }
+            set {
+                this["ActivePlayer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12345")]
+        public string VLCPassword {
+            get {
+                return ((string)(this["VLCPassword"]));
+            }
+            set {
+                this["VLCPassword"] = value;
+            }
+        }
     }
 }
