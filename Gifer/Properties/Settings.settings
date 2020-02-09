@@ -8,5 +8,8 @@
     <Setting Name="VLCPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">12345</Value>
     </Setting>
+    <Setting Name="CRF" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">28</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

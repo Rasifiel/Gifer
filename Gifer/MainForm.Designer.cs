@@ -36,8 +36,12 @@
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.VLCRadioButton = new System.Windows.Forms.RadioButton();
       this.MPCRadioButton = new System.Windows.Forms.RadioButton();
+      this.CRFValue = new System.Windows.Forms.NumericUpDown();
+      this.label1 = new System.Windows.Forms.Label();
+      this.crfToolTip = new System.Windows.Forms.ToolTip(this.components);
       this.trayMenu.SuspendLayout();
       this.groupBox1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.CRFValue)).BeginInit();
       this.SuspendLayout();
       // 
       // trayIcon
@@ -98,11 +102,41 @@
       this.MPCRadioButton.UseVisualStyleBackColor = true;
       this.MPCRadioButton.CheckedChanged += new System.EventHandler(this.MPCRadioButton_CheckedChanged);
       // 
+      // CRFValue
+      // 
+      this.CRFValue.Location = new System.Drawing.Point(17, 114);
+      this.CRFValue.Maximum = new decimal(new int[] {
+            51,
+            0,
+            0,
+            0});
+      this.CRFValue.Name = "CRFValue";
+      this.CRFValue.Size = new System.Drawing.Size(134, 22);
+      this.CRFValue.TabIndex = 2;
+      this.crfToolTip.SetToolTip(this.CRFValue, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
+      this.CRFValue.ValueChanged += new System.EventHandler(this.CRFValue_ValueChanged);
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(19, 88);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(123, 17);
+      this.label1.TabIndex = 3;
+      this.label1.Text = "CRF (quality 0-51)";
+      this.crfToolTip.SetToolTip(this.label1, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
+      // 
+      // crfToolTip
+      // 
+      this.crfToolTip.ToolTipTitle = "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default";
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(170, 95);
+      this.ClientSize = new System.Drawing.Size(159, 143);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.CRFValue);
       this.Controls.Add(this.groupBox1);
       this.Name = "MainForm";
       this.Text = "Gifer";
@@ -111,7 +145,9 @@
       this.trayMenu.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.CRFValue)).EndInit();
       this.ResumeLayout(false);
+      this.PerformLayout();
 
         }
 
@@ -122,6 +158,9 @@
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.RadioButton VLCRadioButton;
     private System.Windows.Forms.RadioButton MPCRadioButton;
+    private System.Windows.Forms.NumericUpDown CRFValue;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.ToolTip crfToolTip;
   }
 }
 

@@ -46,5 +46,17 @@ namespace Gifer.Properties {
                 this["VLCPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("28")]
+        public int CRF {
+            get {
+                return ((int)(this["CRF"]));
+            }
+            set {
+                this["CRF"] = value;
+            }
+        }
     }
 }

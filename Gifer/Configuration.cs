@@ -18,5 +18,12 @@ namespace Gifer {
       get { return Properties.Settings.Default.VLCPassword; }
       set { Properties.Settings.Default.VLCPassword = value; Properties.Settings.Default.Save(); }
     }
+
+    public static int CRF {
+      get {
+        return Properties.Settings.Default.CRF;
+      }
+      set { Properties.Settings.Default.CRF = value; Properties.Settings.Default.Save(); }
+    }
   }
 }

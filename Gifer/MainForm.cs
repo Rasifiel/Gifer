@@ -22,20 +22,35 @@ namespace Gifer {
       RegisterHotKey(Handle, 4, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.C));
       trayIcon.Visible = true;
     }
-
+    const int kWarningTresholdMin = 5;
     private void CutGif(int from, int to, String filePath, String additionalFilter) {
+      if (from > to) {
+        int t = from;
+        from = to;
+        to = t;
+      }
+      if (from == to) {
+        trayIcon.ShowBalloonTip(2000, "", "Start and end markers have same position", ToolTipIcon.Warning);
+        return;
+      }
+      if (TimeSpan.FromMilliseconds(to - from) > TimeSpan.FromMinutes(kWarningTresholdMin)) {
+        if (MessageBox.Show("You selected timespan longer than 5 minutes. Do you want proceed?", "Gifer", MessageBoxButtons.YesNo) != DialogResult.Yes) {
+          return;
+        }
+      }
       var mediaInfo = MediaInfo.Get(filePath).Result;
       var videoStream = mediaInfo.VideoStreams.First().SetSeek(TimeSpan.FromMilliseconds(from));
       var fileName = Path.GetFileNameWithoutExtension(filePath);
       var resultName = fileName + "_" + from + "_" + to + ".mp4";
       var videoPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
       var resultPath = Path.Combine(videoPath, resultName);
-      var basicVf= "scale=iw*sar:ih, scale='min(800,iw)':-2";
-      var vf = ((additionalFilter.Length != 0) ? (additionalFilter+",") : "")+basicVf;
+      var basicVf = "scale=iw*sar:ih, scale='min(800,iw)':-2";
+      var vf = ((additionalFilter.Length != 0) ? (additionalFilter + ",") : "") + basicVf;
+      var crf = Configuration.CRF;
       var conv = new Conversion().AddStream(videoStream)
   .SetOutputPixelFormat(Xabe.FFmpeg.Enums.PixelFormat.Yuv420P)
   .SetInputTime(TimeSpan.FromMilliseconds(to - from))
-  .AddParameter($"-vf \"{vf}\" -crf 28 ")
+  .AddParameter($"-vf \"{vf}\" -crf {crf} ")
   .SetOutput(resultPath).SetOverwriteOutput(true);
       var result = conv.Start().Result;
       if (!result.Success) {
@@ -87,12 +102,17 @@ namespace Gifer {
             break;
           case 3: {
               if (start != -1 && end != -1) {
-                CutGif(start, end, fileName,"");
+                CutGif(start, end, fileName, "");
               }
             }
             break;
           case 4: {
               if (start != -1 && end != -1) {
+                if (start > end) {
+                  int t = start;
+                  start = end;
+                  end = t;
+                }
                 ShowCropDialog();
               }
             }
@@ -121,7 +141,7 @@ namespace Gifer {
       double wScale = image.Width * 1.0 / display.Width;
       double hScale = image.Height * 1.0 / display.Height;
       double maxScale = Math.Max(wScale, hScale);
-      if (maxScale<=1.0) {
+      if (maxScale <= 1.0) {
         imageCropDialog.Size = image.Size;
       } else {
         imageCropDialog.Width = (int)(image.Width / maxScale);
@@ -129,7 +149,7 @@ namespace Gifer {
       }
       if (imageCropDialog.ShowDialog() == DialogResult.Cancel) { return; }
       var region = imageCropDialog.imageCropBox.SelectionRegion;
-      String crop = String.Format("crop={0}:{1}:{2}:{3}",(int)region.Width,(int)region.Height,(int)region.X, (int)region.Y);
+      String crop = String.Format("crop={0}:{1}:{2}:{3}", (int)region.Width, (int)region.Height, (int)region.X, (int)region.Y);
       CutGif(start, end, fileName, crop);
     }
 
@@ -155,6 +175,7 @@ namespace Gifer {
       } else {
         VLCRadioButton.Checked = true;
       }
+      CRFValue.Value = Configuration.CRF;
     }
 
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -166,6 +187,10 @@ namespace Gifer {
 
     private void trayIcon_MouseDoubleClick(object sender, MouseEventArgs e) {
       Show();
+    }
+
+    private void CRFValue_ValueChanged(object sender, EventArgs e) {
+      Configuration.CRF = (int)CRFValue.Value;
     }
   }
 }
