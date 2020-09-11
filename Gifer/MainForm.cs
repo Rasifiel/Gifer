@@ -20,6 +20,7 @@ namespace Gifer {
       RegisterHotKey(Handle, 2, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.S));
       RegisterHotKey(Handle, 3, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.Z));
       RegisterHotKey(Handle, 4, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.C));
+      RegisterHotKey(Handle, 5, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.X));
       trayIcon.Visible = true;
     }
     const int kWarningTresholdMin = 5;
@@ -68,6 +69,7 @@ namespace Gifer {
     int end = -1;
     String fileName = "";
     ImageCropDialog imageCropDialog = new ImageCropDialog();
+    PaddingDialog paddingDialog = new PaddingDialog();
 
     protected override void WndProc(ref Message m) {
       if (m.Msg == 0x0312) {
@@ -102,6 +104,11 @@ namespace Gifer {
             break;
           case 3: {
               if (start != -1 && end != -1) {
+                if (start > end) {
+                  int t = start;
+                  start = end;
+                  end = t;
+                }
                 CutGif(start, end, fileName, "");
               }
             }
@@ -114,6 +121,17 @@ namespace Gifer {
                   end = t;
                 }
                 ShowCropDialog();
+              }
+            }
+            break;
+          case 5: {
+              if (start != -1 && end != -1) {
+                if (start > end) {
+                  int t = start;
+                  start = end;
+                  end = t;
+                }
+                ShowPadDialog();
               }
             }
             break;
@@ -151,6 +169,12 @@ namespace Gifer {
       var region = imageCropDialog.imageCropBox.SelectionRegion;
       String crop = String.Format("crop={0}:{1}:{2}:{3}", (int)region.Width, (int)region.Height, (int)region.X, (int)region.Y);
       CutGif(start, end, fileName, crop);
+    }
+
+    private void ShowPadDialog() {
+      if (paddingDialog.ShowDialog() == DialogResult.Cancel) { return; }
+      String padding_vf = String.Format("tpad=start_mode=clone:start_duration={0}ms:stop_mode=clone:stop_duration={1}ms", paddingDialog.startDur.Text, paddingDialog.stopDur.Text);
+      CutGif(start, end, fileName, padding_vf);
     }
 
     private void quitToolStripMenuItem_Click(object sender, EventArgs e) {
