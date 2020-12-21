@@ -1,5 +1,5 @@
 # Gifer
-Smaill C# based utility application for creating GIF from running VLC or MPC (or MPC forks) 
+Smaill and simple C# based utility application for creating GIF from running VLC or MPC instance (or MPC forks) 
 
 Xabe.FFmpeg used as FFmpeg wrapper 
 
