@@ -4,8 +4,8 @@ Smaill and simple C# based utility application for creating GIF from running VLC
 Xabe.FFmpeg used as FFmpeg wrapper 
 
 ## Hotkeys
-ctrl + alt + a = mark start
-ctrl + alt + s = mark end
-ctrl + alt + z = save
-ctrl + alt + z = prolong first/last frame & save
-ctrl + alt + c = crop & save
+ctrl + alt + a = mark start  
+ctrl + alt + s = mark end  
+ctrl + alt + z = save  
+ctrl + alt + z = prolong first/last frame & save  
+ctrl + alt + c = crop & save  
