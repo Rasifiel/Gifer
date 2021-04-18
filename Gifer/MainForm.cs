@@ -51,14 +51,14 @@ namespace Gifer {
       var conv = new Conversion().AddStream(videoStream)
   .SetOutputPixelFormat(Xabe.FFmpeg.Enums.PixelFormat.Yuv420P)
   .SetInputTime(TimeSpan.FromMilliseconds(to - from))
-  .AddParameter($"-vf \"{vf}\" -crf {crf} ")
+  .AddParameter($"-vf \"{vf}\" -crf {crf} -profile:v baseline -y")
   .SetOutput(resultPath).SetOverwriteOutput(true);
       var result = conv.Start().Result;
       if (!result.Success) {
         trayIcon.ShowBalloonTip(2000, "", "Building gif failed", ToolTipIcon.Error);
         return;
       }
-      trayIcon.ShowBalloonTip(2000, "", "Finished building gif", ToolTipIcon.None);
+      trayIcon.ShowBalloonTip(500, "", "Finished building gif", ToolTipIcon.None);
       StringCollection resultList = new StringCollection {
         resultPath
       };
@@ -84,7 +84,7 @@ namespace Gifer {
                   end = -1;
                 }
                 start = state.position;
-                trayIcon.ShowBalloonTip(2000, "", "Marked start position " + TimeSpan.FromMilliseconds(start).ToString(), ToolTipIcon.None);
+                trayIcon.ShowBalloonTip(500, "", "Marked start position " + TimeSpan.FromMilliseconds(start).ToString(), ToolTipIcon.None);
               }
             }
             break;
@@ -98,7 +98,7 @@ namespace Gifer {
                   start = -1;
                 }
                 end = state.position;
-                trayIcon.ShowBalloonTip(2000, "", "Marked end position " + TimeSpan.FromMilliseconds(end).ToString(), ToolTipIcon.None);
+                trayIcon.ShowBalloonTip(500, "", "Marked end position " + TimeSpan.FromMilliseconds(end).ToString(), ToolTipIcon.None);
               }
             }
             break;
@@ -149,7 +149,7 @@ namespace Gifer {
       String screenPath = Path.ChangeExtension(Path.GetTempFileName(), "png");
       var result = Conversion.Snapshot(state.filePath, screenPath, TimeSpan.FromMilliseconds(state.position)).Start().Result;
       if (!result.Success) {
-        trayIcon.ShowBalloonTip(2000, "", "Getting screenshot failed", ToolTipIcon.Error);
+        trayIcon.ShowBalloonTip(4000, "", "Getting screenshot failed", ToolTipIcon.Error);
         return;
       }
       var image = Image.FromFile(screenPath);
