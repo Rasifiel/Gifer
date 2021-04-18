@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,13 @@ namespace Gifer {
 
     [DllImport("user32.dll")]
     public static extern bool RegisterHotKey(IntPtr hWnd, int id, System.Windows.Input.ModifierKeys fsModifiers, int vlc);
+
+    private static void WriteToLog(String message) {
+      using (EventLog eventLog = new EventLog("Application")) {
+        eventLog.Source = "Application";
+        eventLog.WriteEntry("Gifer error: "+message, EventLogEntryType.Information, 101, 1);
+      }
+    }
 
     public MainForm() {
       InitializeComponent();
@@ -49,12 +57,18 @@ namespace Gifer {
       var vf = ((additionalFilter.Length != 0) ? (additionalFilter + ",") : "") + basicVf;
       var crf = Configuration.CRF;
       var conv = new Conversion().AddStream(videoStream)
-  .SetOutputPixelFormat(Xabe.FFmpeg.Enums.PixelFormat.Yuv420P)
-  .SetInputTime(TimeSpan.FromMilliseconds(to - from))
-  .AddParameter($"-vf \"{vf}\" -crf {crf} -profile:v baseline -y")
-  .SetOutput(resultPath).SetOverwriteOutput(true);
-      var result = conv.Start().Result;
-      if (!result.Success) {
+        .SetOutputPixelFormat(Xabe.FFmpeg.Enums.PixelFormat.Yuv420P)
+        .SetInputTime(TimeSpan.FromMilliseconds(to - from))
+        .AddParameter($"-vf \"{vf}\" -crf {crf} -profile:v baseline")
+        .SetOutput(resultPath).SetOverwriteOutput(true);
+      var convProcess = conv.Start();
+      convProcess.Wait();
+      if (convProcess.Status != System.Threading.Tasks.TaskStatus.RanToCompletion || !convProcess.Result.Success) {
+        if (convProcess.Exception != null) {
+          WriteToLog(convProcess.Exception.ToString());
+        } else {
+          WriteToLog(convProcess.Result.ToString());
+        }
         trayIcon.ShowBalloonTip(2000, "", "Building gif failed", ToolTipIcon.Error);
         return;
       }
