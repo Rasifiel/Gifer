@@ -93,7 +93,6 @@ jobs:
           </item>
           "@
           $path = $runner.temp
-          New-Item -ItemType Directory -Path $path
           New-Item -ItemType Directory -Path "$path\gifer"
           $manifestPath = "$path\manifest.xml"
           echo $xml > $manifestPath
