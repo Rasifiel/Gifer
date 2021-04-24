@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Xabe.FFmpeg;
 
 namespace Gifer {
@@ -34,6 +35,12 @@ namespace Gifer {
       RegisterHotKey(Handle, 5, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.X));
       RegisterHotKey(Handle, 6, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.V));
       trayIcon.Visible = true;
+      DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(2) };
+      timer.Tick += delegate
+      {
+        AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
+      };
+      timer.Start();
     }
     const int kWarningTresholdMin = 5;
     private void CutGif(int from, int to, String filePath, String additionalFilter, bool subtitles = false) {
