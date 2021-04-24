@@ -25,5 +25,12 @@ namespace Gifer {
       }
       set { Properties.Settings.Default.CRF = value; Properties.Settings.Default.Save(); }
     }
+
+    public static int SubtitlesSize {
+      get {
+        return Properties.Settings.Default.SubtitlesSize;
+      }
+      set { Properties.Settings.Default.SubtitlesSize = value; Properties.Settings.Default.Save(); }
+    }
   }
 }

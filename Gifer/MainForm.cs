@@ -32,10 +32,11 @@ namespace Gifer {
       RegisterHotKey(Handle, 3, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.Z));
       RegisterHotKey(Handle, 4, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.C));
       RegisterHotKey(Handle, 5, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.X));
+      RegisterHotKey(Handle, 6, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.V));
       trayIcon.Visible = true;
     }
     const int kWarningTresholdMin = 5;
-    private void CutGif(int from, int to, String filePath, String additionalFilter) {
+    private void CutGif(int from, int to, String filePath, String additionalFilter, bool subtitles = false) {
       if (from > to) {
         int t = from;
         from = to;
@@ -50,19 +51,20 @@ namespace Gifer {
           return;
         }
       }
+      var escapedPath = filePath.Replace("\\", "\\\\").Replace(":", "\\:");
       var mediaInfo = MediaInfo.Get(filePath).Result;
-      var videoStream = mediaInfo.VideoStreams.First().SetSeek(TimeSpan.FromMilliseconds(from));
+      var videoStream = mediaInfo.VideoStreams.First();
       var fileName = Path.GetFileNameWithoutExtension(filePath);
       var resultName = fileName + "_" + from + "_" + to + ".mp4";
       var videoPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
       var resultPath = Path.Combine(videoPath, resultName);
       var basicVf = "scale=iw*sar:ih, scale='min(800,iw)':-2";
-      var vf = ((additionalFilter.Length != 0) ? (additionalFilter + ",") : "") + basicVf;
+      var subtitlesVf = subtitles ? $",subtitles='{escapedPath}':force_style='FontName=Open Sans Semibold,FontSize={Configuration.SubtitlesSize},PrimaryColour=&H00FFFFFF,Bold=1'" : "";
+      var vf = ((additionalFilter.Length != 0) ? (additionalFilter + ",") : "") + basicVf+subtitlesVf;
       var crf = Configuration.CRF;
-      var conv = new Conversion().AddStream(videoStream)
+      var conv = new Conversion().AddStream(videoStream).AddParameter($"-ss {from}ms -to {to}ms -copyts", Xabe.FFmpeg.Enums.ParameterPosition.PreInput)
         .SetOutputPixelFormat(Xabe.FFmpeg.Enums.PixelFormat.Yuv420P)
-        .SetInputTime(TimeSpan.FromMilliseconds(to - from))
-        .AddParameter($"-vf \"{vf}\" -crf {crf} -profile:v baseline")
+        .AddParameter($"-vf \"{vf}\" -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
         .SetOutput(resultPath).SetOverwriteOutput(true);
       var convProcess = conv.Start();
       convProcess.Wait();
@@ -152,6 +154,17 @@ namespace Gifer {
               }
             }
             break;
+          case 6: {
+              if (start != -1 && end != -1) {
+                if (start > end) {
+                  int t = start;
+                  start = end;
+                  end = t;
+                }
+                CutGif(start, end, fileName, "", true);
+              }
+            }
+            break;
         }
       }
       base.WndProc(ref m);
@@ -217,6 +230,7 @@ namespace Gifer {
         VLCRadioButton.Checked = true;
       }
       CRFValue.Value = Configuration.CRF;
+      SubtitesSize.Value = Configuration.SubtitlesSize;
     }
 
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -232,6 +246,10 @@ namespace Gifer {
 
     private void CRFValue_ValueChanged(object sender, EventArgs e) {
       Configuration.CRF = (int)CRFValue.Value;
+    }
+
+    private void numericUpDown1_ValueChanged(object sender, EventArgs e) {
+      Configuration.SubtitlesSize = (int)SubtitesSize.Value;
     }
   }
 }
