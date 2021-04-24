@@ -2,7 +2,7 @@ $projectPath="C:\Users\Rasifiel\source\repos\Gifer"
 $solutionPath="$projectPath\Gifer.sln"
 $releaseDir="$projectPath\Gifer\bin\Release"
 msbuild $solutionPath -p:Configuration=Release -t:Rebuild
-if ($LastExitCode > 0) {
+if ($LastExitCode -ne 0) {
  throw "Failed to build release"
 }
 $version=%{cat $projectPath\Gifer\MainForm.cs | Select-String -Pattern 'AutoUpdater.InstalledVersion = new Version\(\"(.+)\"\)' | % {"$($_.matches.groups[1])"}}
@@ -18,7 +18,6 @@ $xml=@"
 $tempDir = [System.IO.Path]::GetTempPath()
 $random = [System.IO.Path]::GetRandomFileName()
 $path = (Join-Path $tempDir $random)
-echo $path
 New-Item -ItemType Directory -Path $path
 New-Item -ItemType Directory -Path "$path\gifer"
 $manifestPath = "$path\manifest.xml"
@@ -37,7 +36,7 @@ $compress = @{
 }
 Compress-Archive @compress
 scp $releasePath giferdeploy@katou.moe:/var/www/gifer
-if ($LastExitCode > 0) {
+if ($LastExitCode -ne 0) {
  throw "Failed to copy release build"
 }
 scp $manifestPath giferdeploy@katou.moe:/var/www/gifer
