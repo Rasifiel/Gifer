@@ -24,7 +24,7 @@ namespace Gifer {
     }
 
     public MainForm() {
-      AutoUpdater.InstalledVersion = new Version("1.1");
+      AutoUpdater.InstalledVersion = new Version("1.2");
       AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       InitializeComponent();
       RegisterHotKey(Handle, 1, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.A));
