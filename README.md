@@ -1,10 +1,12 @@
 # Gifer - tool to create "gifs" from your video player.
 ## Download
-[Download Gifer 1.1](https://katou.moe/gifer/gifer-1.1.zip).  
+[Download Gifer 1.2](https://katou.moe/gifer/gifer-1.2.zip).  
 [Changelog](https://katou.moe/gifer/changelog.html).
 
 ## Compatibility
 Gifer can work with video players from MPC family (MPC, MPC-BE, MPC-HC) and VLC media player.
+Gifer outputs mp4 video files using h264 codec. Output has width of 800 pixels or less if original video has lesser resolution.
+
 ## Initial setup
 Extract Gifer to any folder.  
 If you are using MPC player:  
@@ -30,6 +32,7 @@ Gifer is running in the background. You can use global hotkeys to interact with 
 * **Ctrl+Alt+Shift+Z**. Starts building "gif" for marked starting and ending points. 
 * **Ctrl+Alt+Shift+X**. Shows padding dialog. Starts building "gif" for marked starting and ending points adding padding in the before start and after finish. 
 * **Ctrl+Alt+Shift+C**. Shows cropping dialog. Starts building "gif" for marked starting and ending points cropping video frame. 
+* **Ctrl+Alt+Shift+V**. Starts building "gif" for marked starting and ending points with subtitles.  
 
 ### Workflow
 You select start and finish for moment that you want to cut using player seek bar (it can be helpful to use next/previous frame keybindings to select precise moments). After you start gif building process. When building process is finished Gifer will show notification in system tray. Built "gif" is placed in default Videos folder and also in clipboard, so you can use it immediately. 
