@@ -9,7 +9,13 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
+using ToastNotifications;
+using ToastNotifications.Core;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Messages;
+using ToastNotifications.Position;
 using Xabe.FFmpeg;
+using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 namespace Gifer {
   public partial class MainForm : Form {
@@ -23,9 +29,45 @@ namespace Gifer {
         eventLog.WriteEntry("Gifer error: "+message, EventLogEntryType.Information, 101, 1);
       }
     }
+    Notifier notifier = new Notifier(cfg => {
+      cfg.PositionProvider = new PrimaryScreenPositionProvider(
+          corner: Corner.BottomRight,
+          offsetX: 10,
+          offsetY: 10
+        );
+      cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+          notificationLifetime: TimeSpan.FromSeconds(2),
+          maximumNotificationCount: MaximumNotificationCount.FromCount(3)
+        );
+      cfg.DisplayOptions.TopMost = true;
+      cfg.DisplayOptions.Width = 200;
+      cfg.Dispatcher = System.Windows.Application.Current.Dispatcher;
+    }
+    );
+
+    enum MessageType {
+      Info, Warning, Error, Success
+    }
+
+    private void ShowMessage(MessageType type, String message) {
+      var opts = new MessageOptions{
+        ShowCloseButton = true,
+        FreezeOnMouseEnter = true,
+        NotificationClickAction = n => { n.Close(); },
+      };
+      if (type == MessageType.Info) {
+        notifier.ShowInformation(message, opts);
+      } else if (type == MessageType.Warning) {
+        notifier.ShowWarning(message, opts);
+      } else if (type == MessageType.Error) {
+        notifier.ShowError(message, opts);
+      } else if (type == MessageType.Success) {
+        notifier.ShowSuccess(message, opts);
+      }
+    }
 
     public MainForm() {
-      AutoUpdater.InstalledVersion = new Version("1.2");
+      AutoUpdater.InstalledVersion = new Version("1.3");
       AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       InitializeComponent();
       RegisterHotKey(Handle, 1, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.A));
@@ -50,7 +92,7 @@ namespace Gifer {
         to = t;
       }
       if (from == to) {
-        trayIcon.ShowBalloonTip(2000, "", "Start and end markers have same position", ToolTipIcon.Warning);
+        ShowMessage(MessageType.Warning, "Start and end markers have same position");
         return;
       }
       if (TimeSpan.FromMilliseconds(to - from) > TimeSpan.FromMinutes(kWarningTresholdMin)) {
@@ -81,10 +123,10 @@ namespace Gifer {
         } else {
           WriteToLog(convProcess.Result.ToString());
         }
-        trayIcon.ShowBalloonTip(2000, "", "Building gif failed", ToolTipIcon.Error);
+        ShowMessage(MessageType.Error, "Building gif failed");
         return;
       }
-      trayIcon.ShowBalloonTip(500, "", "Finished building gif", ToolTipIcon.None);
+      ShowMessage(MessageType.Success, "Finished building gif");
       StringCollection resultList = new StringCollection {
         resultPath
       };
@@ -103,28 +145,28 @@ namespace Gifer {
           case 1: {
               PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
               if (state.position == -1) {
-                trayIcon.ShowBalloonTip(4000, "", "Can't connect to video player", ToolTipIcon.Error);
+                ShowMessage(MessageType.Error, "Can't connect to video player");
               } else {
                 if (fileName != state.filePath) {
                   fileName = state.filePath;
                   end = -1;
                 }
                 start = state.position;
-                trayIcon.ShowBalloonTip(500, "", "Marked start position " + TimeSpan.FromMilliseconds(start).ToString(), ToolTipIcon.None);
+                ShowMessage(MessageType.Info, "Marked start position " + TimeSpan.FromMilliseconds(start).ToString());
               }
             }
             break;
           case 2: {
               PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
               if (state.position == -1) {
-                trayIcon.ShowBalloonTip(4000, "", "Can't connect to video player", ToolTipIcon.Error);
+                ShowMessage(MessageType.Error, "Can't connect to video player");
               } else {
                 if (fileName != state.filePath) {
                   fileName = state.filePath;
                   start = -1;
                 }
                 end = state.position;
-                trayIcon.ShowBalloonTip(500, "", "Marked end position " + TimeSpan.FromMilliseconds(end).ToString(), ToolTipIcon.None);
+                ShowMessage(MessageType.Info, "Marked end position " + TimeSpan.FromMilliseconds(end).ToString());
               }
             }
             break;
@@ -180,13 +222,13 @@ namespace Gifer {
     private void ShowCropDialog() {
       PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
       if (state.position == -1) {
-        trayIcon.ShowBalloonTip(4000, "", "Can't connect to video player", ToolTipIcon.Error);
+        ShowMessage(MessageType.Error, "Can't connect to video player");
         return;
       }
       String screenPath = Path.ChangeExtension(Path.GetTempFileName(), "png");
       var result = Conversion.Snapshot(state.filePath, screenPath, TimeSpan.FromMilliseconds(state.position)).Start().Result;
       if (!result.Success) {
-        trayIcon.ShowBalloonTip(4000, "", "Getting screenshot failed", ToolTipIcon.Error);
+        ShowMessage(MessageType.Error, "Getting screenshot failed");
         return;
       }
       var image = Image.FromFile(screenPath);
