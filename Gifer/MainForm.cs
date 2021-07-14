@@ -66,12 +66,12 @@ namespace Gifer {
       }
     }
 
-    private void RegisterHotkeys(Dictionary<GiferActionId, GiferAction> keys) {
+    private void RegisterHotkeys(Dictionary<GiferActionId, Keys> keys) {
       foreach (var row in keys) {
-        if (row.Value.Key == 0) {
+        if (row.Value == 0) {
           HotkeyManager.Current.Remove(row.Key.ToString());
         } else {
-          HotkeyManager.Current.AddOrReplace(row.Key.ToString(), row.Value.Key, HotkeyHandler);
+          HotkeyManager.Current.AddOrReplace(row.Key.ToString(), row.Value, HotkeyHandler);
         }
       }
     }
@@ -309,8 +309,10 @@ namespace Gifer {
 
     private void configHotkeysButton_Click(object sender, EventArgs e) {
       List<(int, String, Keys)> hotkeyList = new List<(int, string, Keys)>();
-      foreach (var row in Configuration.KeyConfig) {
-        hotkeyList.Add(( (int)row.Key, row.Value.Description, row.Value.Key));
+      var defaultActions = DefaultGiferActions.BuildDefaultActions();
+      var currentConfig = Configuration.KeyConfig;
+      foreach (var row in currentConfig) {
+        hotkeyList.Add(( (int)row.Key, defaultActions[row.Key].Description, row.Value));
       }
       hotkeyList = hotkeyList.OrderBy(t => t.Item1).ToList();
       HotkeyConfig hotkeyConfig = new HotkeyConfig(hotkeyList);

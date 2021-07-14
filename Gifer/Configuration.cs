@@ -38,16 +38,18 @@ namespace Gifer {
       set { Properties.Settings.Default.SubtitlesSize = value; Properties.Settings.Default.Save(); }
     }
 
-    public static Dictionary<GiferActionId, GiferAction> KeyConfig {
+    public static Dictionary<GiferActionId, Keys> KeyConfig {
       get {
         var defaultConfig = DefaultGiferActions.BuildDefaultActions();
+        Dictionary<GiferActionId, Keys> config;
         if (Properties.Settings.Default.KeyConfig.Length == 0) {
-          return defaultConfig;
+          config = new Dictionary<GiferActionId, Keys>();
+        } else {
+          config = JsonConvert.DeserializeObject<Dictionary<GiferActionId, Keys>>(Properties.Settings.Default.KeyConfig);
         }
-        Dictionary<GiferActionId, GiferAction> config = JsonConvert.DeserializeObject<Dictionary<GiferActionId, GiferAction>>(Properties.Settings.Default.KeyConfig);
         foreach (var row in defaultConfig) {
           if (!config.ContainsKey(row.Key)) {
-            config.Add(row.Key, row.Value);
+            config.Add(row.Key, row.Value.Key);
           }
         }
         return config;

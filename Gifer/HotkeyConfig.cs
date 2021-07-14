@@ -27,10 +27,10 @@ namespace Gifer {
       }
     }
 
-    public Dictionary<GiferActionId, GiferAction> GetKeyMap() {
-      Dictionary<GiferActionId, GiferAction> result = new Dictionary<GiferActionId, GiferAction>();
+    public Dictionary<GiferActionId, Keys> GetKeyMap() {
+      Dictionary<GiferActionId, Keys> result = new Dictionary<GiferActionId, Keys>();
       for (int i = 0; i< config_.Count;i++) {
-        result[(GiferActionId)config_[i].Item1] = new GiferAction(labels_[i].Text, editors_[i].HotKey);
+        result[(GiferActionId)config_[i].Item1] =  editors_[i].HotKey;
       }
       return result;
     }
@@ -38,7 +38,7 @@ namespace Gifer {
     List<ValueTuple<int, String, Keys>> config_;
     List<HotkeyEditor> editors_ = new List<HotkeyEditor>();
     List<Label> labels_ = new List<Label>();
-    public Dictionary<GiferActionId, GiferAction> result_;
+    public Dictionary<GiferActionId, Keys> result_;
 
     private void saveButton_Click(object sender, EventArgs e) {
       result_ = GetKeyMap();
