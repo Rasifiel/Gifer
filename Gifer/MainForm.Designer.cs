@@ -148,7 +148,6 @@
       this.label2.TabIndex = 4;
       this.label2.Text = "Subtitles size";
       this.crfToolTip.SetToolTip(this.label2, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
-      this.label2.Click += new System.EventHandler(this.label2_Click);
       // 
       // SubtitesSize
       // 
@@ -178,6 +177,7 @@
       this.configHotkeysButton.TabIndex = 6;
       this.configHotkeysButton.Text = "Config hotkeys";
       this.configHotkeysButton.UseVisualStyleBackColor = true;
+      this.configHotkeysButton.Click += new System.EventHandler(this.configHotkeysButton_Click);
       // 
       // MainForm
       // 

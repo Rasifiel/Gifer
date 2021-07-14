@@ -77,7 +77,7 @@ namespace Gifer {
     }
 
     public MainForm() {
-      AutoUpdater.InstalledVersion = new Version("1.3");
+      AutoUpdater.InstalledVersion = new Version("1.4");
       AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       InitializeComponent();
       RegisterHotkeys(Configuration.KeyConfig);
@@ -307,14 +307,19 @@ namespace Gifer {
       Configuration.SubtitlesSize = (int)SubtitesSize.Value;
     }
 
-    private void label2_Click(object sender, EventArgs e) {
-      HotkeyConfig hotkeyConfig = new HotkeyConfig(new List<(int, String, Keys)> {
-        ( 1, "Start", Keys.Control | Keys.Alt | Keys.Shift | Keys.A),
-        ( 1, "End", Keys.Control | Keys.Alt | Keys.Shift | Keys.S),
-        ( 1, "Create", Keys.Control | Keys.Alt | Keys.Shift | Keys.Z),
-        ( 1, "Create pad", Keys.Control | Keys.Alt | Keys.Shift | Keys.X),
-      });
-      hotkeyConfig.ShowDialog();
+    private void configHotkeysButton_Click(object sender, EventArgs e) {
+      List<(int, String, Keys)> hotkeyList = new List<(int, string, Keys)>();
+      foreach (var row in Configuration.KeyConfig) {
+        hotkeyList.Add(( (int)row.Key, row.Value.Description, row.Value.Key));
+      }
+      hotkeyList = hotkeyList.OrderBy(t => t.Item1).ToList();
+      HotkeyConfig hotkeyConfig = new HotkeyConfig(hotkeyList);
+      HotkeyManager.Current.IsEnabled = false;
+      if (hotkeyConfig.ShowDialog() == DialogResult.OK) {
+        Configuration.KeyConfig = hotkeyConfig.result_;
+        RegisterHotkeys(Configuration.KeyConfig);
+      }
+      HotkeyManager.Current.IsEnabled = true;
     }
   }
 }

@@ -21,24 +21,20 @@ namespace Gifer.HotkeyComponent {
 
     public Keys HotKey {
       get {
-        if (this.IsHandleCreated) {
           var key = (uint)SendMessage(this.Handle, 0x402, IntPtr.Zero, IntPtr.Zero);
           hotKey = (Keys)(key & 0xff);
           if ((key & 0x100) != 0) hotKey |= Keys.Shift;
           if ((key & 0x200) != 0) hotKey |= Keys.Control;
           if ((key & 0x400) != 0) hotKey |= Keys.Alt;
-        }
         return hotKey;
       }
       set {
         hotKey = value;
-        if (this.IsHandleCreated) {
           var key = (int)hotKey & 0xff;
           if ((hotKey & Keys.Shift) != 0) key |= 0x100;
           if ((hotKey & Keys.Control) != 0) key |= 0x200;
           if ((hotKey & Keys.Alt) != 0) key |= 0x400;
           SendMessage(this.Handle, 0x401, (IntPtr)key, IntPtr.Zero);
-        }
       }
     }
 

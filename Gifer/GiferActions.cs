@@ -27,8 +27,7 @@ namespace Gifer {
   }
 
   public static class DefaultGiferActions {
-    public static Dictionary<GiferActionId, GiferAction> BuildDefaultActions() {
-      Dictionary<GiferActionId, GiferAction> result = new Dictionary<GiferActionId, GiferAction>() {
+    private static readonly Dictionary<GiferActionId, GiferAction> defaultConfig = new Dictionary<GiferActionId, GiferAction>() {
         { GiferActionId.MarkStart, new GiferAction( "Mark start", Keys.Control | Keys.Alt | Keys.Shift | Keys.A ) },
         { GiferActionId.MarkEnd, new GiferAction( "Mark end", Keys.Control | Keys.Alt | Keys.Shift | Keys.S ) },
         { GiferActionId.CreateDefault, new GiferAction("Create default gif", Keys.Control | Keys.Alt | Keys.Shift | Keys.Z ) },
@@ -36,7 +35,8 @@ namespace Gifer {
         { GiferActionId.CreateCropped, new GiferAction( "Create cropped gif", Keys.Control | Keys.Alt | Keys.Shift | Keys.C ) },
         { GiferActionId.CreateWithSubs, new GiferAction( "Create gif with subs", Keys.Control | Keys.Alt | Keys.Shift | Keys.V ) },
       };
-      return result;
+    public static Dictionary<GiferActionId, GiferAction> BuildDefaultActions() {
+      return defaultConfig;
     }
   }
 }

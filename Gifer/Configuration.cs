@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Gifer {
 
@@ -35,13 +38,23 @@ namespace Gifer {
       set { Properties.Settings.Default.SubtitlesSize = value; Properties.Settings.Default.Save(); }
     }
 
-    static (int, String, Keys) GetDefaultKeyConfig(int id) {
-      return (0, "", 0);
-    }
-
     public static Dictionary<GiferActionId, GiferAction> KeyConfig {
       get {
-        return DefaultGiferActions.BuildDefaultActions();
+        var defaultConfig = DefaultGiferActions.BuildDefaultActions();
+        if (Properties.Settings.Default.KeyConfig.Length == 0) {
+          return defaultConfig;
+        }
+        Dictionary<GiferActionId, GiferAction> config = JsonConvert.DeserializeObject<Dictionary<GiferActionId, GiferAction>>(Properties.Settings.Default.KeyConfig);
+        foreach (var row in defaultConfig) {
+          if (!config.ContainsKey(row.Key)) {
+            config.Add(row.Key, row.Value);
+          }
+        }
+        return config;
+      }
+      set {
+        Properties.Settings.Default.KeyConfig = JsonConvert.SerializeObject(value);
+        Properties.Settings.Default.Save();
       }
     }
   }

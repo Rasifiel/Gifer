@@ -15,18 +15,33 @@ namespace Gifer {
       editorPanel.RowStyles.Clear();
       foreach (var row in config) {
         editorPanel.RowCount++;
-        Label label = new Label() { Text = row.Item2 };
+        Label label = new Label() { Text = row.Item2, AutoSize = true };
         labels_.Add(label);
         editorPanel.Controls.Add(label, 0, editorPanel.RowCount - 1);
-        HotkeyEditor hotkeyEditor = new HotkeyEditor() { HotKey = row.Item3, Width = 200, Height = 20 };
+        HotkeyEditor hotkeyEditor = new HotkeyEditor() { Width = 200, Height = 20, Visible = true };
         editors_.Add(hotkeyEditor);
         editorPanel.Controls.Add(hotkeyEditor, 1, editorPanel.RowCount - 1);
+        hotkeyEditor.CreateControl();
+        hotkeyEditor.HotKey = row.Item3;
         editorPanel.RowStyles.Add(new RowStyle(SizeType.AutoSize, 0));
       }
+    }
+
+    public Dictionary<GiferActionId, GiferAction> GetKeyMap() {
+      Dictionary<GiferActionId, GiferAction> result = new Dictionary<GiferActionId, GiferAction>();
+      for (int i = 0; i< config_.Count;i++) {
+        result[(GiferActionId)config_[i].Item1] = new GiferAction(labels_[i].Text, editors_[i].HotKey);
+      }
+      return result;
     }
 
     List<ValueTuple<int, String, Keys>> config_;
     List<HotkeyEditor> editors_ = new List<HotkeyEditor>();
     List<Label> labels_ = new List<Label>();
+    public Dictionary<GiferActionId, GiferAction> result_;
+
+    private void saveButton_Click(object sender, EventArgs e) {
+      result_ = GetKeyMap();
+    }
   }
 }

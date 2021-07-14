@@ -38,6 +38,7 @@ namespace Gifer {
       this.saveButton.TabIndex = 0;
       this.saveButton.Text = "Save hotkeys";
       this.saveButton.UseVisualStyleBackColor = true;
+      this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
       // 
       // editorPanel
       // 
@@ -45,8 +46,8 @@ namespace Gifer {
             | System.Windows.Forms.AnchorStyles.Right)));
       this.editorPanel.AutoSize = true;
       this.editorPanel.ColumnCount = 2;
-      this.editorPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-      this.editorPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
+      this.editorPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.editorPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
       this.editorPanel.Location = new System.Drawing.Point(6, 8);
       this.editorPanel.Name = "editorPanel";
       this.editorPanel.RowCount = 1;
