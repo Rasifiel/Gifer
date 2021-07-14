@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Gifer {
-  enum GiferActionId : int {
+  public enum GiferActionId : int {
     MarkStart = 1,
     MarkEnd = 2,
     CreateDefault = 3,
@@ -12,19 +12,22 @@ namespace Gifer {
     CreateWithSubs = 6,
   }
 
-  class GiferAction {
+  public class GiferAction {
 
     String description;
-    Keys defaultKey;
+    Keys key;
 
     public GiferAction(string description, Keys defaultKey) {
-      this.description = description;
-      this.defaultKey = defaultKey;
+      this.Description = description;
+      this.Key = defaultKey;
     }
+
+    public string Description { get => description; set => description = value; }
+    public Keys Key { get => key; set => key = value; }
   }
 
-  static class DefaultGiferActions {
-    static Dictionary<GiferActionId, GiferAction> BuildDefaultActions() {
+  public static class DefaultGiferActions {
+    public static Dictionary<GiferActionId, GiferAction> BuildDefaultActions() {
       Dictionary<GiferActionId, GiferAction> result = new Dictionary<GiferActionId, GiferAction>() {
         { GiferActionId.MarkStart, new GiferAction( "Mark start", Keys.Control | Keys.Alt | Keys.Shift | Keys.A ) },
         { GiferActionId.MarkEnd, new GiferAction( "Mark end", Keys.Control | Keys.Alt | Keys.Shift | Keys.S ) },

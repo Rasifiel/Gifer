@@ -39,11 +39,9 @@ namespace Gifer {
       return (0, "", 0);
     }
 
-    public static List<(int, String, Keys)> KeyConfig {
+    public static Dictionary<GiferActionId, GiferAction> KeyConfig {
       get {
-        if (Properties.Settings.Default.KeyConfig.Length == 0) {
-
-        }
+        return DefaultGiferActions.BuildDefaultActions();
       }
     }
   }

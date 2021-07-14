@@ -1,4 +1,6 @@
 ﻿using AutoUpdaterDotNET;
+using NHotkey;
+using NHotkey.WindowsForms;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -21,13 +23,10 @@ using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 namespace Gifer {
   public partial class MainForm : Form {
 
-    [DllImport("user32.dll")]
-    public static extern bool RegisterHotKey(IntPtr hWnd, int id, System.Windows.Input.ModifierKeys fsModifiers, int vlc);
-
     private static void WriteToLog(String message) {
       using (EventLog eventLog = new EventLog("Application")) {
         eventLog.Source = "Application";
-        eventLog.WriteEntry("Gifer error: "+message, EventLogEntryType.Information, 101, 1);
+        eventLog.WriteEntry("Gifer error: " + message, EventLogEntryType.Information, 101, 1);
       }
     }
     Notifier notifier = new Notifier(cfg => {
@@ -51,7 +50,7 @@ namespace Gifer {
     }
 
     private void ShowMessage(MessageType type, String message) {
-      var opts = new MessageOptions{
+      var opts = new MessageOptions {
         ShowCloseButton = true,
         FreezeOnMouseEnter = true,
         NotificationClickAction = n => { n.Close(); },
@@ -67,20 +66,24 @@ namespace Gifer {
       }
     }
 
+    private void RegisterHotkeys(Dictionary<GiferActionId, GiferAction> keys) {
+      foreach (var row in keys) {
+        if (row.Value.Key == 0) {
+          HotkeyManager.Current.Remove(row.Key.ToString());
+        } else {
+          HotkeyManager.Current.AddOrReplace(row.Key.ToString(), row.Value.Key, HotkeyHandler);
+        }
+      }
+    }
+
     public MainForm() {
       AutoUpdater.InstalledVersion = new Version("1.3");
       AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       InitializeComponent();
-      RegisterHotKey(Handle, 1, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.A));
-      RegisterHotKey(Handle, 2, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.S));
-      RegisterHotKey(Handle, 3, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.Z));
-      RegisterHotKey(Handle, 4, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.C));
-      RegisterHotKey(Handle, 5, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.X));
-      RegisterHotKey(Handle, 6, System.Windows.Input.ModifierKeys.Control | System.Windows.Input.ModifierKeys.Alt | System.Windows.Input.ModifierKeys.Shift, KeyInterop.VirtualKeyFromKey(Key.V));
+      RegisterHotkeys(Configuration.KeyConfig);
       trayIcon.Visible = true;
       DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(2) };
-      timer.Tick += delegate
-      {
+      timer.Tick += delegate {
         AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       };
       timer.Start();
@@ -110,7 +113,7 @@ namespace Gifer {
       var resultPath = Path.Combine(videoPath, resultName);
       var basicVf = "scale=iw*sar:ih, scale='min(800,iw)':-2";
       var subtitlesVf = subtitles ? $",subtitles='{escapedPath}':force_style='FontName=Open Sans Semibold,FontSize={Configuration.SubtitlesSize},PrimaryColour=&H00FFFFFF,Bold=1'" : "";
-      var vf = ((additionalFilter.Length != 0) ? (additionalFilter + ",") : "") + basicVf+subtitlesVf;
+      var vf = ((additionalFilter.Length != 0) ? (additionalFilter + ",") : "") + basicVf + subtitlesVf;
       var crf = Configuration.CRF;
       var conv = new Conversion().AddStream(videoStream).AddParameter($"-ss {from}ms -to {to}ms -copyts", Xabe.FFmpeg.Enums.ParameterPosition.PreInput)
         .SetOutputPixelFormat(Xabe.FFmpeg.Enums.PixelFormat.Yuv420P)
@@ -140,84 +143,86 @@ namespace Gifer {
     ImageCropDialog imageCropDialog = new ImageCropDialog();
     PaddingDialog paddingDialog = new PaddingDialog();
 
-    protected override void WndProc(ref Message m) {
-      if (m.Msg == 0x0312) {
-        switch (m.WParam.ToInt32()) {
-          case 1: {
-              PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
-              if (state.position == -1) {
-                ShowMessage(MessageType.Error, "Can't connect to video player");
-              } else {
-                if (fileName != state.filePath) {
-                  fileName = state.filePath;
-                  end = -1;
-                }
-                start = state.position;
-                ShowMessage(MessageType.Info, "Marked start position " + TimeSpan.FromMilliseconds(start).ToString());
-              }
-            }
-            break;
-          case 2: {
-              PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
-              if (state.position == -1) {
-                ShowMessage(MessageType.Error, "Can't connect to video player");
-              } else {
-                if (fileName != state.filePath) {
-                  fileName = state.filePath;
-                  start = -1;
-                }
-                end = state.position;
-                ShowMessage(MessageType.Info, "Marked end position " + TimeSpan.FromMilliseconds(end).ToString());
-              }
-            }
-            break;
-          case 3: {
-              if (start != -1 && end != -1) {
-                if (start > end) {
-                  int t = start;
-                  start = end;
-                  end = t;
-                }
-                CutGif(start, end, fileName, "");
-              }
-            }
-            break;
-          case 4: {
-              if (start != -1 && end != -1) {
-                if (start > end) {
-                  int t = start;
-                  start = end;
-                  end = t;
-                }
-                ShowCropDialog();
-              }
-            }
-            break;
-          case 5: {
-              if (start != -1 && end != -1) {
-                if (start > end) {
-                  int t = start;
-                  start = end;
-                  end = t;
-                }
-                ShowPadDialog();
-              }
-            }
-            break;
-          case 6: {
-              if (start != -1 && end != -1) {
-                if (start > end) {
-                  int t = start;
-                  start = end;
-                  end = t;
-                }
-                CutGif(start, end, fileName, "", true);
-              }
-            }
-            break;
-        }
+    private void HotkeyHandler(object sender, HotkeyEventArgs e) {
+      GiferActionId actionId;
+      if (!Enum.TryParse(e.Name, out actionId)) {
+        return;
       }
-      base.WndProc(ref m);
+      switch (actionId) {
+        case GiferActionId.MarkStart: {
+            PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
+            if (state.position == -1) {
+              ShowMessage(MessageType.Error, "Can't connect to video player");
+            } else {
+              if (fileName != state.filePath) {
+                fileName = state.filePath;
+                end = -1;
+              }
+              start = state.position;
+              ShowMessage(MessageType.Info, "Marked start position " + TimeSpan.FromMilliseconds(start).ToString());
+            }
+          }
+          break;
+        case GiferActionId.MarkEnd: {
+            PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
+            if (state.position == -1) {
+              ShowMessage(MessageType.Error, "Can't connect to video player");
+            } else {
+              if (fileName != state.filePath) {
+                fileName = state.filePath;
+                start = -1;
+              }
+              end = state.position;
+              ShowMessage(MessageType.Info, "Marked end position " + TimeSpan.FromMilliseconds(end).ToString());
+            }
+          }
+          break;
+        case GiferActionId.CreateDefault: {
+            if (start != -1 && end != -1) {
+              if (start > end) {
+                int t = start;
+                start = end;
+                end = t;
+              }
+              CutGif(start, end, fileName, "");
+            }
+          }
+          break;
+        case GiferActionId.CreatePadded: {
+            if (start != -1 && end != -1) {
+              if (start > end) {
+                int t = start;
+                start = end;
+                end = t;
+              }
+              ShowPadDialog();
+            }
+          }
+          break;
+        case GiferActionId.CreateCropped: {
+            if (start != -1 && end != -1) {
+              if (start > end) {
+                int t = start;
+                start = end;
+                end = t;
+              }
+              ShowCropDialog();
+            }
+          }
+          break;
+        case GiferActionId.CreateWithSubs: {
+            if (start != -1 && end != -1) {
+              if (start > end) {
+                int t = start;
+                start = end;
+                end = t;
+              }
+              CutGif(start, end, fileName, "", true);
+            }
+          }
+          break;
+      }
+      e.Handled = true;
     }
 
     private void ShowCropDialog() {
