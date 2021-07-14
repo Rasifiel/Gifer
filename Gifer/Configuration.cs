@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Gifer {
 
@@ -31,6 +33,18 @@ namespace Gifer {
         return Properties.Settings.Default.SubtitlesSize;
       }
       set { Properties.Settings.Default.SubtitlesSize = value; Properties.Settings.Default.Save(); }
+    }
+
+    static (int, String, Keys) GetDefaultKeyConfig(int id) {
+      return (0, "", 0);
+    }
+
+    public static List<(int, String, Keys)> KeyConfig {
+      get {
+        if (Properties.Settings.Default.KeyConfig.Length == 0) {
+
+        }
+      }
     }
   }
 }

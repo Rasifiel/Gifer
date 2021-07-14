@@ -41,6 +41,7 @@
       this.crfToolTip = new System.Windows.Forms.ToolTip(this.components);
       this.label2 = new System.Windows.Forms.Label();
       this.SubtitesSize = new System.Windows.Forms.NumericUpDown();
+      this.configHotkeysButton = new System.Windows.Forms.Button();
       this.trayMenu.SuspendLayout();
       this.groupBox1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.CRFValue)).BeginInit();
@@ -147,6 +148,7 @@
       this.label2.TabIndex = 4;
       this.label2.Text = "Subtitles size";
       this.crfToolTip.SetToolTip(this.label2, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
+      this.label2.Click += new System.EventHandler(this.label2_Click);
       // 
       // SubtitesSize
       // 
@@ -168,11 +170,21 @@
             0});
       this.SubtitesSize.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
       // 
+      // configHotkeysButton
+      // 
+      this.configHotkeysButton.Location = new System.Drawing.Point(17, 194);
+      this.configHotkeysButton.Name = "configHotkeysButton";
+      this.configHotkeysButton.Size = new System.Drawing.Size(134, 30);
+      this.configHotkeysButton.TabIndex = 6;
+      this.configHotkeysButton.Text = "Config hotkeys";
+      this.configHotkeysButton.UseVisualStyleBackColor = true;
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(161, 192);
+      this.ClientSize = new System.Drawing.Size(161, 225);
+      this.Controls.Add(this.configHotkeysButton);
       this.Controls.Add(this.SubtitesSize);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
@@ -205,6 +217,7 @@
     private System.Windows.Forms.ToolTip crfToolTip;
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.NumericUpDown SubtitesSize;
+    private System.Windows.Forms.Button configHotkeysButton;
   }
 }
 

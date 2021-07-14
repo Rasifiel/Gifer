@@ -1,5 +1,6 @@
 ﻿using AutoUpdaterDotNET;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
@@ -299,6 +300,16 @@ namespace Gifer {
 
     private void numericUpDown1_ValueChanged(object sender, EventArgs e) {
       Configuration.SubtitlesSize = (int)SubtitesSize.Value;
+    }
+
+    private void label2_Click(object sender, EventArgs e) {
+      HotkeyConfig hotkeyConfig = new HotkeyConfig(new List<(int, String, Keys)> {
+        ( 1, "Start", Keys.Control | Keys.Alt | Keys.Shift | Keys.A),
+        ( 1, "End", Keys.Control | Keys.Alt | Keys.Shift | Keys.S),
+        ( 1, "Create", Keys.Control | Keys.Alt | Keys.Shift | Keys.Z),
+        ( 1, "Create pad", Keys.Control | Keys.Alt | Keys.Shift | Keys.X),
+      });
+      hotkeyConfig.ShowDialog();
     }
   }
 }
