@@ -111,7 +111,7 @@ namespace Gifer {
       var resultName = fileName + "_" + from + "_" + to + ".mp4";
       var videoPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
       var resultPath = Path.Combine(videoPath, resultName);
-      var basicVf = "scale=iw*sar:ih, scale='min(800,iw)':-2";
+      var basicVf = "scale=iw*sar:ih, scale='min(800,ceil(iw/2)*2)':-2";
       var subtitlesVf = subtitles ? $",subtitles='{escapedPath}':force_style='FontName=Open Sans Semibold,FontSize={Configuration.SubtitlesSize},PrimaryColour=&H00FFFFFF,Bold=1'" : "";
       var vf = ((additionalFilter.Length != 0) ? (additionalFilter + ",") : "") + basicVf + subtitlesVf;
       var crf = Configuration.CRF;
