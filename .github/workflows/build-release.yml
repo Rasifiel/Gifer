@@ -19,7 +19,7 @@ jobs:
 
     env:
       Solution_Name: Gifer.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
-      Project_Path: Gifer.csproj                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+      Project_Path: Gifer\Gifer.csproj                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
 
     steps:
     - name: Checkout
