@@ -1,4 +1,5 @@
 ﻿using AutoUpdaterDotNET;
+using Microsoft.Toolkit.Uwp.Notifications;
 using NHotkey;
 using NHotkey.WindowsForms;
 using System;
@@ -12,11 +13,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
-using ToastNotifications;
-using ToastNotifications.Core;
-using ToastNotifications.Lifetime;
-using ToastNotifications.Messages;
-using ToastNotifications.Position;
 using Xabe.FFmpeg;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
@@ -29,41 +25,15 @@ namespace Gifer {
         eventLog.WriteEntry("Gifer error: " + message, EventLogEntryType.Information, 101, 1);
       }
     }
-    Notifier notifier = new Notifier(cfg => {
-      cfg.PositionProvider = new PrimaryScreenPositionProvider(
-          corner: Corner.BottomRight,
-          offsetX: 10,
-          offsetY: 10
-        );
-      cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
-          notificationLifetime: TimeSpan.FromSeconds(2),
-          maximumNotificationCount: MaximumNotificationCount.FromCount(3)
-        );
-      cfg.DisplayOptions.TopMost = true;
-      cfg.DisplayOptions.Width = 200;
-      cfg.Dispatcher = System.Windows.Application.Current.Dispatcher;
-    }
-    );
 
     enum MessageType {
       Info, Warning, Error, Success
     }
 
     private void ShowMessage(MessageType type, String message) {
-      var opts = new MessageOptions {
-        ShowCloseButton = true,
-        FreezeOnMouseEnter = true,
-        NotificationClickAction = n => { n.Close(); },
-      };
-      if (type == MessageType.Info) {
-        notifier.ShowInformation(message, opts);
-      } else if (type == MessageType.Warning) {
-        notifier.ShowWarning(message, opts);
-      } else if (type == MessageType.Error) {
-        notifier.ShowError(message, opts);
-      } else if (type == MessageType.Success) {
-        notifier.ShowSuccess(message, opts);
-      }
+      new ToastContentBuilder().AddText(type.ToString()).AddText(message).Show(toast => {
+        toast.ExpirationTime = DateTime.Now.AddSeconds(5);
+      });
     }
 
     private void RegisterHotkeys(Dictionary<GiferActionId, Keys> keys) {
@@ -94,7 +64,7 @@ namespace Gifer {
       return String.Join(",", vfs.FindAll(vf => vf.Length > 0));
     }
 
-    private void CutGif(int from, int to, String filePath, String[] additionalFilter = null, bool subtitles = false, bool fullResolution = false, bool keepAudio = false) {
+    async private void CutGif(int from, int to, String filePath, String[] additionalFilter = null, bool subtitles = false, bool fullResolution = false, bool keepAudio = false) {
       if (from > to) {
         int t = from;
         from = to;
@@ -110,7 +80,7 @@ namespace Gifer {
         }
       }
       var escapedPath = filePath.Replace("\\", "\\\\").Replace(":", "\\:");
-      var mediaInfo = MediaInfo.Get(filePath).Result;
+      var mediaInfo = await FFmpeg.GetMediaInfo(filePath);
       var videoStream = mediaInfo.VideoStreams.First();
       var fileName = Path.GetFileNameWithoutExtension(filePath);
       var resultName = fileName + "_" + from + "_" + to + ".mp4";
@@ -132,21 +102,18 @@ namespace Gifer {
         vfs.Add(subtitlesVf);
       }
       var crf = Configuration.CRF;
-      var conv = new Conversion().AddStream(videoStream).AddParameter($"-ss {from}ms -to {to}ms -copyts", Xabe.FFmpeg.Enums.ParameterPosition.PreInput)
-        .SetOutputPixelFormat(Xabe.FFmpeg.Enums.PixelFormat.Yuv420P)
+      var conv = new Conversion().AddStream(videoStream).AddParameter($"-ss {from}ms -to {to}ms -copyts", ParameterPosition.PreInput)
+        .SetPixelFormat(PixelFormat.yuv420p)
         .AddParameter($"-vf \"{BuildVF(vfs)}\" -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
         .SetOutput(resultPath).SetOverwriteOutput(true);
       if (keepAudio) {
         conv = conv.AddStream(mediaInfo.AudioStreams.First());
       }
-      var convProcess = conv.Start();
-      convProcess.Wait();
-      if (convProcess.Status != System.Threading.Tasks.TaskStatus.RanToCompletion || !convProcess.Result.Success) {
-        if (convProcess.Exception != null) {
-          WriteToLog(convProcess.Exception.ToString());
-        } else {
-          WriteToLog(convProcess.Result.ToString());
-        }
+      try {
+        var convProcess = await conv.Start();
+      }
+      catch (Exception ex) {
+        WriteToLog(ex.ToString());
         ShowMessage(MessageType.Error, "Building gif failed");
         return;
       }
@@ -263,8 +230,9 @@ namespace Gifer {
         return;
       }
       String screenPath = Path.ChangeExtension(Path.GetTempFileName(), "png");
-      var result = Conversion.Snapshot(state.filePath, screenPath, TimeSpan.FromMilliseconds(state.position)).Start().Result;
-      if (!result.Success) {
+      var snapshotConv = FFmpeg.Conversions.FromSnippet.Snapshot(state.filePath, screenPath, TimeSpan.FromMilliseconds(state.position));
+      snapshotConv.Wait();
+      if (!snapshotConv.IsCompleted) {
         ShowMessage(MessageType.Error, "Getting screenshot failed");
         return;
       }

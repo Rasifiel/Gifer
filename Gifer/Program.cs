@@ -13,12 +13,8 @@ namespace Gifer {
     static void Main() {
       var app = new System.Windows.Application();
 
-      System.Windows.Application.Current.Resources.MergedDictionaries.Add(
-      System.Windows.Application.LoadComponent(
-        new Uri("ToastNotifications.Messages;component/Themes/Default.xaml",
-        UriKind.Relative)) as System.Windows.ResourceDictionary);
-
       Application.EnableVisualStyles();
+      Application.SetHighDpiMode(HighDpiMode.SystemAware);
       Application.SetCompatibleTextRenderingDefault(false);
       Application.Run(new MainForm());
     }
