@@ -77,7 +77,7 @@ namespace Gifer {
     }
 
     public MainForm() {
-      AutoUpdater.InstalledVersion = new Version("1.5");
+      AutoUpdater.InstalledVersion = new Version("1.6");
       AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       InitializeComponent();
       RegisterHotkeys(Configuration.KeyConfig);
