@@ -42,10 +42,15 @@
       this.label2 = new System.Windows.Forms.Label();
       this.SubtitesSize = new System.Windows.Forms.NumericUpDown();
       this.configHotkeysButton = new System.Windows.Forms.Button();
+      this.customGifGroupBox = new System.Windows.Forms.GroupBox();
+      this.keepAudioCheck = new System.Windows.Forms.CheckBox();
+      this.keepSubsCheck = new System.Windows.Forms.CheckBox();
+      this.fullResolutionCheck = new System.Windows.Forms.CheckBox();
       this.trayMenu.SuspendLayout();
       this.groupBox1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.CRFValue)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.SubtitesSize)).BeginInit();
+      this.customGifGroupBox.SuspendLayout();
       this.SuspendLayout();
       // 
       // trayIcon
@@ -62,12 +67,12 @@
       this.trayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitToolStripMenuItem});
       this.trayMenu.Name = "trayMenu";
-      this.trayMenu.Size = new System.Drawing.Size(107, 28);
+      this.trayMenu.Size = new System.Drawing.Size(135, 42);
       // 
       // quitToolStripMenuItem
       // 
       this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-      this.quitToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+      this.quitToolStripMenuItem.Size = new System.Drawing.Size(134, 38);
       this.quitToolStripMenuItem.Text = "Quit";
       this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
       // 
@@ -75,11 +80,11 @@
       // 
       this.groupBox1.Controls.Add(this.VLCRadioButton);
       this.groupBox1.Controls.Add(this.MPCRadioButton);
-      this.groupBox1.Location = new System.Drawing.Point(12, 12);
-      this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.groupBox1.Location = new System.Drawing.Point(18, 19);
+      this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-      this.groupBox1.Size = new System.Drawing.Size(140, 71);
+      this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+      this.groupBox1.Size = new System.Drawing.Size(210, 111);
       this.groupBox1.TabIndex = 1;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Video player";
@@ -87,10 +92,10 @@
       // VLCRadioButton
       // 
       this.VLCRadioButton.AutoSize = true;
-      this.VLCRadioButton.Location = new System.Drawing.Point(5, 46);
-      this.VLCRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.VLCRadioButton.Location = new System.Drawing.Point(8, 72);
+      this.VLCRadioButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.VLCRadioButton.Name = "VLCRadioButton";
-      this.VLCRadioButton.Size = new System.Drawing.Size(55, 21);
+      this.VLCRadioButton.Size = new System.Drawing.Size(84, 29);
       this.VLCRadioButton.TabIndex = 1;
       this.VLCRadioButton.TabStop = true;
       this.VLCRadioButton.Text = "VLC";
@@ -100,10 +105,10 @@
       // MPCRadioButton
       // 
       this.MPCRadioButton.AutoSize = true;
-      this.MPCRadioButton.Location = new System.Drawing.Point(5, 18);
-      this.MPCRadioButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.MPCRadioButton.Location = new System.Drawing.Point(8, 28);
+      this.MPCRadioButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.MPCRadioButton.Name = "MPCRadioButton";
-      this.MPCRadioButton.Size = new System.Drawing.Size(58, 21);
+      this.MPCRadioButton.Size = new System.Drawing.Size(90, 29);
       this.MPCRadioButton.TabIndex = 0;
       this.MPCRadioButton.TabStop = true;
       this.MPCRadioButton.Text = "MPC";
@@ -112,15 +117,15 @@
       // 
       // CRFValue
       // 
-      this.CRFValue.Location = new System.Drawing.Point(17, 114);
-      this.CRFValue.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.CRFValue.Location = new System.Drawing.Point(26, 178);
+      this.CRFValue.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.CRFValue.Maximum = new decimal(new int[] {
             51,
             0,
             0,
             0});
       this.CRFValue.Name = "CRFValue";
-      this.CRFValue.Size = new System.Drawing.Size(133, 22);
+      this.CRFValue.Size = new System.Drawing.Size(200, 31);
       this.CRFValue.TabIndex = 2;
       this.crfToolTip.SetToolTip(this.CRFValue, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
       this.CRFValue.ValueChanged += new System.EventHandler(this.CRFValue_ValueChanged);
@@ -128,9 +133,10 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(19, 89);
+      this.label1.Location = new System.Drawing.Point(28, 139);
+      this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(123, 17);
+      this.label1.Size = new System.Drawing.Size(187, 25);
       this.label1.TabIndex = 3;
       this.label1.Text = "CRF (quality 0-51)";
       this.crfToolTip.SetToolTip(this.label1, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
@@ -142,24 +148,25 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(19, 142);
+      this.label2.Location = new System.Drawing.Point(28, 222);
+      this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(91, 17);
+      this.label2.Size = new System.Drawing.Size(140, 25);
       this.label2.TabIndex = 4;
       this.label2.Text = "Subtitles size";
       this.crfToolTip.SetToolTip(this.label2, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
       // 
       // SubtitesSize
       // 
-      this.SubtitesSize.Location = new System.Drawing.Point(17, 160);
-      this.SubtitesSize.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.SubtitesSize.Location = new System.Drawing.Point(26, 250);
+      this.SubtitesSize.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.SubtitesSize.Minimum = new decimal(new int[] {
             5,
             0,
             0,
             0});
       this.SubtitesSize.Name = "SubtitesSize";
-      this.SubtitesSize.Size = new System.Drawing.Size(133, 22);
+      this.SubtitesSize.Size = new System.Drawing.Size(200, 31);
       this.SubtitesSize.TabIndex = 5;
       this.crfToolTip.SetToolTip(this.SubtitesSize, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
       this.SubtitesSize.Value = new decimal(new int[] {
@@ -171,26 +178,73 @@
       // 
       // configHotkeysButton
       // 
-      this.configHotkeysButton.Location = new System.Drawing.Point(17, 194);
+      this.configHotkeysButton.Location = new System.Drawing.Point(26, 303);
+      this.configHotkeysButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
       this.configHotkeysButton.Name = "configHotkeysButton";
-      this.configHotkeysButton.Size = new System.Drawing.Size(134, 30);
+      this.configHotkeysButton.Size = new System.Drawing.Size(201, 47);
       this.configHotkeysButton.TabIndex = 6;
       this.configHotkeysButton.Text = "Config hotkeys";
       this.configHotkeysButton.UseVisualStyleBackColor = true;
       this.configHotkeysButton.Click += new System.EventHandler(this.configHotkeysButton_Click);
       // 
+      // customGifGroupBox
+      // 
+      this.customGifGroupBox.Controls.Add(this.fullResolutionCheck);
+      this.customGifGroupBox.Controls.Add(this.keepSubsCheck);
+      this.customGifGroupBox.Controls.Add(this.keepAudioCheck);
+      this.customGifGroupBox.Location = new System.Drawing.Point(22, 382);
+      this.customGifGroupBox.Name = "customGifGroupBox";
+      this.customGifGroupBox.Size = new System.Drawing.Size(304, 205);
+      this.customGifGroupBox.TabIndex = 7;
+      this.customGifGroupBox.TabStop = false;
+      this.customGifGroupBox.Text = "Custom Gif settings";
+      // 
+      // keepAudioCheck
+      // 
+      this.keepAudioCheck.AutoSize = true;
+      this.keepAudioCheck.Location = new System.Drawing.Point(15, 37);
+      this.keepAudioCheck.Name = "keepAudioCheck";
+      this.keepAudioCheck.Size = new System.Drawing.Size(153, 29);
+      this.keepAudioCheck.TabIndex = 0;
+      this.keepAudioCheck.Text = "Keep audio";
+      this.keepAudioCheck.UseVisualStyleBackColor = true;
+      this.keepAudioCheck.CheckedChanged += new System.EventHandler(this.keepAudioCheck_CheckedChanged);
+      // 
+      // keepSubsCheck
+      // 
+      this.keepSubsCheck.AutoSize = true;
+      this.keepSubsCheck.Location = new System.Drawing.Point(15, 72);
+      this.keepSubsCheck.Name = "keepSubsCheck";
+      this.keepSubsCheck.Size = new System.Drawing.Size(146, 29);
+      this.keepSubsCheck.TabIndex = 1;
+      this.keepSubsCheck.Text = "Keep subs";
+      this.keepSubsCheck.UseVisualStyleBackColor = true;
+      this.keepSubsCheck.CheckedChanged += new System.EventHandler(this.keepSubsCheck_CheckedChanged);
+      // 
+      // fullResolutionCheck
+      // 
+      this.fullResolutionCheck.AutoSize = true;
+      this.fullResolutionCheck.Location = new System.Drawing.Point(15, 107);
+      this.fullResolutionCheck.Name = "fullResolutionCheck";
+      this.fullResolutionCheck.Size = new System.Drawing.Size(179, 29);
+      this.fullResolutionCheck.TabIndex = 2;
+      this.fullResolutionCheck.Text = "Full resolution";
+      this.fullResolutionCheck.UseVisualStyleBackColor = true;
+      this.fullResolutionCheck.CheckedChanged += new System.EventHandler(this.fullResolutionCheck_CheckedChanged);
+      // 
       // MainForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(161, 225);
+      this.ClientSize = new System.Drawing.Size(348, 619);
+      this.Controls.Add(this.customGifGroupBox);
       this.Controls.Add(this.configHotkeysButton);
       this.Controls.Add(this.SubtitesSize);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.CRFValue);
       this.Controls.Add(this.groupBox1);
-      this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+      this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
       this.Name = "MainForm";
       this.Text = "Gifer";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -200,6 +254,8 @@
       this.groupBox1.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.CRFValue)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.SubtitesSize)).EndInit();
+      this.customGifGroupBox.ResumeLayout(false);
+      this.customGifGroupBox.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -218,6 +274,10 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.NumericUpDown SubtitesSize;
     private System.Windows.Forms.Button configHotkeysButton;
-  }
+        private System.Windows.Forms.GroupBox customGifGroupBox;
+        private System.Windows.Forms.CheckBox fullResolutionCheck;
+        private System.Windows.Forms.CheckBox keepSubsCheck;
+        private System.Windows.Forms.CheckBox keepAudioCheck;
+    }
 }
 

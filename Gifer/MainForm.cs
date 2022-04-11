@@ -89,7 +89,12 @@ namespace Gifer {
       timer.Start();
     }
     const int kWarningTresholdMin = 5;
-    private void CutGif(int from, int to, String filePath, String additionalFilter, bool subtitles = false) {
+
+    String BuildVF(List<String> vfs) {
+      return String.Join(",", vfs.FindAll(vf => vf.Length > 0));
+    }
+
+    private void CutGif(int from, int to, String filePath, String[] additionalFilter = null, bool subtitles = false, bool fullResolution = false, bool keepAudio = false) {
       if (from > to) {
         int t = from;
         from = to;
@@ -111,14 +116,29 @@ namespace Gifer {
       var resultName = fileName + "_" + from + "_" + to + ".mp4";
       var videoPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
       var resultPath = Path.Combine(videoPath, resultName);
-      var basicVf = "scale=iw*sar:ih, scale='min(800,ceil(iw/2)*2)':-2";
-      var subtitlesVf = subtitles ? $",subtitles='{escapedPath}':force_style='FontName=Open Sans Semibold,FontSize={Configuration.SubtitlesSize},PrimaryColour=&H00FFFFFF,Bold=1'" : "";
-      var vf = ((additionalFilter.Length != 0) ? (additionalFilter + ",") : "") + basicVf + subtitlesVf;
+      var resizeVf = "scale=iw*sar:ih, scale='min(800,ceil(iw/2)*2)':-2";
+      var roundVf = "pad=ceil(iw/2)*2:ceil(ih/2)*2";
+      var subtitlesVf = $"subtitles='{escapedPath}':force_style='FontName=Open Sans Semibold,FontSize={Configuration.SubtitlesSize},PrimaryColour=&H00FFFFFF,Bold=1'";
+      var vfs = new List<String>();
+      if (additionalFilter != null) {
+        vfs.AddRange(additionalFilter);
+      }
+      if (!fullResolution) {
+        vfs.Add(resizeVf);
+      } else {
+        vfs.Add(roundVf);
+      }
+      if (subtitles) {
+        vfs.Add(subtitlesVf);
+      }
       var crf = Configuration.CRF;
       var conv = new Conversion().AddStream(videoStream).AddParameter($"-ss {from}ms -to {to}ms -copyts", Xabe.FFmpeg.Enums.ParameterPosition.PreInput)
         .SetOutputPixelFormat(Xabe.FFmpeg.Enums.PixelFormat.Yuv420P)
-        .AddParameter($"-vf \"{vf}\" -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
+        .AddParameter($"-vf \"{BuildVF(vfs)}\" -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
         .SetOutput(resultPath).SetOverwriteOutput(true);
+      if (keepAudio) {
+        conv = conv.AddStream(mediaInfo.AudioStreams.First());
+      }
       var convProcess = conv.Start();
       convProcess.Wait();
       if (convProcess.Status != System.Threading.Tasks.TaskStatus.RanToCompletion || !convProcess.Result.Success) {
@@ -184,7 +204,7 @@ namespace Gifer {
                 start = end;
                 end = t;
               }
-              CutGif(start, end, fileName, "");
+              CutGif(start, end, fileName);
             }
           }
           break;
@@ -217,7 +237,18 @@ namespace Gifer {
                 start = end;
                 end = t;
               }
-              CutGif(start, end, fileName, "", true);
+              CutGif(start, end, fileName, subtitles: true);
+            }
+          }
+          break;
+        case GiferActionId.CreateCustom: {
+            if (start != -1 && end != -1) {
+              if (start > end) {
+                int t = start;
+                start = end;
+                end = t;
+              }
+              CutGif(start, end, fileName, subtitles: Configuration.CustomKeepSubs, fullResolution: Configuration.CustomFullResolution, keepAudio: Configuration.CustomKeepAudio);
             }
           }
           break;
@@ -253,13 +284,13 @@ namespace Gifer {
       if (imageCropDialog.ShowDialog() == DialogResult.Cancel) { return; }
       var region = imageCropDialog.imageCropBox.SelectionRegion;
       String crop = String.Format("crop={0}:{1}:{2}:{3}", (int)region.Width, (int)region.Height, (int)region.X, (int)region.Y);
-      CutGif(start, end, fileName, crop);
+      CutGif(start, end, fileName, new []{ crop });
     }
 
     private void ShowPadDialog() {
       if (paddingDialog.ShowDialog() == DialogResult.Cancel) { return; }
       String padding_vf = String.Format("tpad=start_mode=clone:start_duration={0}ms:stop_mode=clone:stop_duration={1}ms", paddingDialog.startDur.Text, paddingDialog.stopDur.Text);
-      CutGif(start, end, fileName, padding_vf);
+      CutGif(start, end, fileName, new []{ padding_vf });
     }
 
     private void quitToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -286,6 +317,9 @@ namespace Gifer {
       }
       CRFValue.Value = Configuration.CRF;
       SubtitesSize.Value = Configuration.SubtitlesSize;
+      keepAudioCheck.Checked = Configuration.CustomKeepAudio;
+      keepSubsCheck.Checked = Configuration.CustomKeepSubs;
+      fullResolutionCheck.Checked = Configuration.CustomFullResolution;
     }
 
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -322,6 +356,18 @@ namespace Gifer {
         RegisterHotkeys(Configuration.KeyConfig);
       }
       HotkeyManager.Current.IsEnabled = true;
+    }
+
+    private void keepAudioCheck_CheckedChanged(object sender, EventArgs e) {
+      Configuration.CustomKeepAudio = keepAudioCheck.Checked;
+    }
+
+    private void keepSubsCheck_CheckedChanged(object sender, EventArgs e) {
+      Configuration.CustomKeepSubs = keepSubsCheck.Checked;
+    }
+
+    private void fullResolutionCheck_CheckedChanged(object sender, EventArgs e) {
+      Configuration.CustomFullResolution = fullResolutionCheck.Checked;
     }
   }
 }

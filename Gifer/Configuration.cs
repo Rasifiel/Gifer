@@ -59,5 +59,26 @@ namespace Gifer {
         Properties.Settings.Default.Save();
       }
     }
+
+    public static bool CustomKeepAudio {
+      get {
+        return Properties.Settings.Default.CustomKeepAudio;
+      }
+      set { Properties.Settings.Default.CustomKeepAudio = value; Properties.Settings.Default.Save(); }
+    }
+
+    public static bool CustomKeepSubs {
+      get {
+        return Properties.Settings.Default.CustomKeepSubs;
+      }
+      set { Properties.Settings.Default.CustomKeepSubs = value; Properties.Settings.Default.Save(); }
+    }
+
+    public static bool CustomFullResolution {
+      get {
+        return Properties.Settings.Default.CustomFullResolution;
+      }
+      set { Properties.Settings.Default.CustomFullResolution = value; Properties.Settings.Default.Save(); }
+    }
   }
 }

@@ -10,6 +10,7 @@ namespace Gifer {
     CreatePadded = 4,
     CreateCropped = 5,
     CreateWithSubs = 6,
+    CreateCustom = 7,
   }
 
   public class GiferAction {
@@ -34,6 +35,7 @@ namespace Gifer {
         { GiferActionId.CreatePadded, new GiferAction( "Create gif with padding", Keys.Control | Keys.Alt | Keys.Shift | Keys.X ) },
         { GiferActionId.CreateCropped, new GiferAction( "Create cropped gif", Keys.Control | Keys.Alt | Keys.Shift | Keys.C ) },
         { GiferActionId.CreateWithSubs, new GiferAction( "Create gif with subs", Keys.Control | Keys.Alt | Keys.Shift | Keys.V ) },
+        { GiferActionId.CreateCustom, new GiferAction( "Create gif with custom settings", Keys.Control | Keys.Alt | Keys.Shift | Keys.B) },
       };
     public static Dictionary<GiferActionId, GiferAction> BuildDefaultActions() {
       return defaultConfig;

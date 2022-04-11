@@ -18,7 +18,7 @@ namespace Gifer {
         Label label = new Label() { Text = row.Item2, AutoSize = true };
         labels_.Add(label);
         editorPanel.Controls.Add(label, 0, editorPanel.RowCount - 1);
-        HotkeyEditor hotkeyEditor = new HotkeyEditor() { Width = 200, Height = 20, Visible = true };
+        HotkeyEditor hotkeyEditor = new HotkeyEditor() { Width = 200, Height = 25, Visible = true };
         editors_.Add(hotkeyEditor);
         editorPanel.Controls.Add(hotkeyEditor, 1, editorPanel.RowCount - 1);
         hotkeyEditor.CreateControl();
