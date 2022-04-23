@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7 2022-04-23
+
+### Added
+- Logging. Gifer will produce 'Gifer.log' file with debug information.
+
+### Fixed
+- Fixed building gifs with subtitles when filepath contains '(quote character).
+
 ## 1.6 2022-04-11
 
 ### Added
