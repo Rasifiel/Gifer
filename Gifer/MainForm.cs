@@ -79,8 +79,14 @@ namespace Gifer {
           return;
         }
       }
-      var escapedPath = filePath.Replace("\\", "\\\\").Replace(":", "\\:");
+      var subpath = Path.ChangeExtension(Path.GetTempFileName(), "ass");
+      var escapedPath = subpath.Replace("\\", "\\\\").Replace(":", "\\:").Replace("[","\\[").Replace("]","\\]");
       var mediaInfo = await FFmpeg.GetMediaInfo(filePath);
+      if (subtitles) {
+        var subconv = FFmpeg.Conversions.New().AddStream(mediaInfo.SubtitleStreams.First()).SetOutput(subpath);
+        WriteToLog(subconv.Build());
+        await subconv.Start();
+      }
       var videoStream = mediaInfo.VideoStreams.First();
       var fileName = Path.GetFileNameWithoutExtension(filePath);
       var resultName = fileName + "_" + from + "_" + to + ".mp4";
@@ -109,6 +115,7 @@ namespace Gifer {
       if (keepAudio) {
         conv = conv.AddStream(mediaInfo.AudioStreams.First());
       }
+      WriteToLog(conv.Build());
       try {
         var convProcess = await conv.Start();
       }
@@ -122,6 +129,9 @@ namespace Gifer {
         resultPath
       };
       Clipboard.SetFileDropList(resultList);
+      if (subtitles) {
+        File.Delete(subpath);
+      }
     }
 
     int start = -1;
