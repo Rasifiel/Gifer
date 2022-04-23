@@ -45,7 +45,7 @@ $compress = @{
   CompressionLevel = "Fastest"
   DestinationPath = "$releasePath"
 }
-cat .\docs\changelog.md | pandoc  -t html -o changelog.html
+Get-Content -Raw .\docs\changelog.md | pandoc -s -t html -o changelog.html --metadata title="Changelog"
 $index_md = Get-Content .\docs\index.md -Raw
 $index_md.Replace("@ver@","$version").Replace("@filename@","gifer-$version.zip") | pandoc -s -t html -o index.html --metadata title="Gifer"
 $index_ru_md = Get-Content .\docs\index_ru.md -Raw
