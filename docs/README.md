@@ -1,6 +1,6 @@
 # Gifer - tool to create "gifs" from your video player.
 ## Download
-[Download Gifer 1.8](https://katou.moe/gifer/gifer-1.8.zip).  
+[Download Gifer @ver@](https://katou.moe/gifer/@filename@).  
 [Changelog](https://katou.moe/gifer/changelog.html).
 
 ## Compatibility
@@ -46,4 +46,3 @@ You select start and finish for moment that you want to cut using player seek ba
 
 ### Dependencies
 This project is built using [FFmpeg](https://ffmpeg.org), [Cyotek image box component](cyotek.com/blog/tag/imagebox), [Autoupdate.NET](https://github.com/ravibpatel/AutoUpdater.NET), [Newtonsoft JSON](https://www.newtonsoft.com/json), [Xabe FFmpeg wrapper](https://xabe.net/product/xabe_ffmpeg/).
-
