@@ -31,9 +31,17 @@ namespace Gifer {
     }
 
     private void ShowMessage(MessageType type, String message) {
-      new ToastContentBuilder().AddText(type.ToString()).AddText(message).Show(toast => {
-        toast.ExpirationTime = DateTime.Now.AddSeconds(5);
-      });
+      Color textColor = Color.Black;
+      if (type == MessageType.Success) {
+        textColor = Color.Green;
+      }
+      else if (type == MessageType.Warning) {
+        textColor = Color.Red;
+      }
+      else if (type != MessageType.Error) {
+        textColor = Color.Red;
+      }
+      notificationWindow.AddMessage(message, 5000, textColor);
     }
 
     private void RegisterHotkeys(Dictionary<GiferActionId, Keys> keys) {
@@ -46,6 +54,8 @@ namespace Gifer {
       }
     }
 
+    NotificationWindow notificationWindow;
+
     public MainForm() {
       AutoUpdater.InstalledVersion = new Version("1.7");
       AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
@@ -57,6 +67,7 @@ namespace Gifer {
         AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       };
       timer.Start();
+      notificationWindow = new NotificationWindow();
     }
     const int kWarningTresholdMin = 5;
 
