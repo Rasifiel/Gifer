@@ -53,6 +53,7 @@ $index_ru_md.Replace("@ver@","$version").Replace("@filename@","gifer-$version.zi
 $readme_md = Get-Content .\docs\README.md -Raw
 $readme_md.Replace("@ver@","$version").Replace("@filename@","gifer-$version.zip") | out-file README.md -Encoding utf8
 Compress-Archive @compress
+Copy-Item -Path $releasePath -Destination "release"
 scp $releasePath giferdeploy@katou.moe:/var/www/gifer
 if ($LastExitCode -ne 0) {
  throw "Failed to copy release build"
