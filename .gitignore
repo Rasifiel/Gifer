@@ -342,3 +342,4 @@ healthchecksdb
 *.zip
 /AnalysisReport.sarif
 *.clef
+/changelog.html
