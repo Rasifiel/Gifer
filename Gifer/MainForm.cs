@@ -1,4 +1,5 @@
 ﻿using AutoUpdaterDotNET;
+using log4net;
 using Microsoft.Toolkit.Uwp.Notifications;
 using NHotkey;
 using NHotkey.WindowsForms;
@@ -19,11 +20,10 @@ using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 namespace Gifer {
   public partial class MainForm : Form {
 
+    private static readonly ILog log = LogManager.GetLogger(typeof(MainForm));
+
     private static void WriteToLog(String message) {
-      using (EventLog eventLog = new EventLog("Application")) {
-        eventLog.Source = "Application";
-        eventLog.WriteEntry("Gifer error: " + message, EventLogEntryType.Information, 101, 1);
-      }
+      log.Info(message);
     }
 
     enum MessageType {
