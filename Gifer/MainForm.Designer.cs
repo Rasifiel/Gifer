@@ -250,7 +250,10 @@
       this.Controls.Add(this.CRFValue);
       this.Controls.Add(this.groupBox1);
       this.Margin = new System.Windows.Forms.Padding(4);
+      this.MaximizeBox = false;
+      this.MinimizeBox = false;
       this.Name = "MainForm";
+      this.ShowIcon = false;
       this.Text = "Gifer";
       this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
       this.Load += new System.EventHandler(this.MainForm_Load);
