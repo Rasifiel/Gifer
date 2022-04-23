@@ -45,9 +45,11 @@ $compress = @{
   CompressionLevel = "Fastest"
   DestinationPath = "$releasePath"
 }
+pandoc .\docs\changelog.md -t html -o changelog.html
 Compress-Archive @compress
 scp $releasePath giferdeploy@katou.moe:/var/www/gifer
 if ($LastExitCode -ne 0) {
  throw "Failed to copy release build"
 }
 scp $manifestPath giferdeploy@katou.moe:/var/www/gifer
+scp changelog.html giferdeploy@katou.moe:/var/www/gifer
