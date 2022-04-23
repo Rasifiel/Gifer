@@ -50,6 +50,8 @@ $index_md = Get-Content .\docs\index.md -Raw
 $index_md.Replace("@ver@","$version").Replace("@filename@","gifer-$version.zip") | pandoc -s -t html -o index.html --metadata title="Gifer"
 $index_ru_md = Get-Content .\docs\index_ru.md -Raw
 $index_ru_md.Replace("@ver@","$version").Replace("@filename@","gifer-$version.zip") | pandoc -s -t html -o index_ru.html --metadata title="Gifer"
+$readme_md = Get-Content .\docs\README.md -Raw
+$readme_md.Replace("@ver@","$version").Replace("@filename@","gifer-$version.zip") | out-file README.md -Encoding utf8
 Compress-Archive @compress
 scp $releasePath giferdeploy@katou.moe:/var/www/gifer
 if ($LastExitCode -ne 0) {
