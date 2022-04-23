@@ -35,7 +35,7 @@ namespace Gifer {
     public PlayerState GetPlayerState() {
       HttpClient httpClient = new HttpClient();
       try {
-        var response = httpClient.GetAsync("http://localhost:13579/status.html").Result;
+        var response = httpClient.GetAsync("http://127.0.0.1:13579/status.html").Result;
         if (response.IsSuccessStatusCode) {
           var content = response.Content.ReadAsStringAsync().Result.Replace("\"", "'");
           Regex matcher = new Regex("OnStatus\\('.*', '(.*)', (\\d+), '.*', \\d+, '.*', \\d+, \\d+, '(.*)'\\)");
@@ -66,13 +66,13 @@ namespace Gifer {
     }
     public PlayerState GetPlayerState() {
       try {
-        var statusStr = QueryVLC("http://localhost:8080/requests/status.json");
+        var statusStr = QueryVLC("http://127.0.0.1:8080/requests/status.json");
         JObject statusObj = JObject.Parse(statusStr);
         double position = (double)statusObj["position"];
         int currentplid = (int)statusObj["currentplid"];
         int length = (int)statusObj["length"];
         String status = (String)statusObj["status"];
-        var playlistStr = QueryVLC("http://localhost:8080/requests/playlist.json");
+        var playlistStr = QueryVLC("http://127.0.0.1:8080/requests/playlist.json");
         var playlistObj = JObject.Parse(playlistStr);
         String fileUri = "";
         foreach (var child in playlistObj["children"]) {
