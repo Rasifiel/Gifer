@@ -45,11 +45,15 @@ $compress = @{
   CompressionLevel = "Fastest"
   DestinationPath = "$releasePath"
 }
-pandoc .\docs\changelog.md -t html -o changelog.html
+cat .\docs\changelog.md | pandoc  -t html -o changelog.html
+$index_md = Get-Content .\docs\index.md -Raw
+$index_md.Replace("@ver@","$version").Replace("@filename@","gifer-$version.zip") | pandoc -s -t html -o index.html --metadata title="Gifer"
+$index_ru_md = Get-Content .\docs\index_ru.md -Raw
+$index_ru_md.Replace("@ver@","$version").Replace("@filename@","gifer-$version.zip") | pandoc -s -t html -o index_ru.html --metadata title="Gifer"
 Compress-Archive @compress
 scp $releasePath giferdeploy@katou.moe:/var/www/gifer
 if ($LastExitCode -ne 0) {
  throw "Failed to copy release build"
 }
 scp $manifestPath giferdeploy@katou.moe:/var/www/gifer
-scp changelog.html giferdeploy@katou.moe:/var/www/gifer
+scp *.html giferdeploy@katou.moe:/var/www/gifer
