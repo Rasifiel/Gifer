@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.8 2022-04-23
+
+### Changed
+- Changed notification from Windows native to custom form based.
+
+### Fixed
+- Fixed possible delay for all operations for IPv4-only config.
+
 ## 1.7 2022-04-23
 
 ### Added
