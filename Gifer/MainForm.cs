@@ -10,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -74,6 +75,9 @@ namespace Gifer {
       return String.Join(",", vfs.FindAll(vf => vf.Length > 0));
     }
 
+    IAudioStream selectedAudio = null;
+    ISubtitleStream selectedSubtitle = null;
+
     async private void CutGif(int from, int to, String filePath, String[] additionalFilter = null, bool subtitles = false, bool fullResolution = false, bool keepAudio = false) {
       if (from > to) {
         int t = from;
@@ -94,11 +98,12 @@ namespace Gifer {
       var mediaInfo = await FFmpeg.GetMediaInfo(filePath);
       bool isDVDsubs = false;
       if (subtitles) {
-        if (mediaInfo.SubtitleStreams.First().Codec == "dvd_subtitle") {
+        if (selectedSubtitle == null) selectedSubtitle = mediaInfo.SubtitleStreams.First();
+        if (selectedSubtitle.Codec == "dvd_subtitle") {
           isDVDsubs = true;
         }
         else {
-          var subconv = FFmpeg.Conversions.New().AddStream(mediaInfo.SubtitleStreams.First()).SetOutput(subpath);
+          var subconv = FFmpeg.Conversions.New().AddStream(selectedSubtitle).SetOutput(subpath);
           WriteToLog(subconv.Build());
           await subconv.Start();
         }
@@ -111,7 +116,6 @@ namespace Gifer {
       var resizeVf = "scale=iw*sar:ih, scale='min(800,ceil(iw/2)*2)':-2";
       var roundVf = "pad=ceil(iw/2)*2:ceil(ih/2)*2";
       var subtitlesVf = $"subtitles='{escapedPath}':force_style='FontName=Open Sans Semibold,FontSize={Configuration.SubtitlesSize},PrimaryColour=&H00FFFFFF,Bold=1'";
-      var dvdSubsVf = $"scale[vidi];[sub][vidi]scale2ref[subrs][vidio];[vidio][subrs]overlay;[0:s]fps=fps={videoStream.Framerate}[sub]";
       var vfs = new List<String>();
       if (additionalFilter != null) {
         vfs.AddRange(additionalFilter);
@@ -123,6 +127,7 @@ namespace Gifer {
       }
       if (subtitles) {
         if (isDVDsubs) {
+          var dvdSubsVf = $"scale[vidi];[sub][vidi]scale2ref[subrs][vidio];[vidio][subrs]overlay;[0:{selectedSubtitle.Index}]fps=fps={videoStream.Framerate}[sub]";
           vfs.Add(dvdSubsVf);
         }
         else {
@@ -135,10 +140,11 @@ namespace Gifer {
         .AddParameter($"-filter_complex \"[0:v]{BuildVF(vfs)}\" -map -0:s -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
         .SetOutput(resultPath).SetOverwriteOutput(true);
       if (keepAudio) {
-        conv = conv.AddStream(mediaInfo.AudioStreams.First());
+        if (selectedAudio == null) selectedAudio = mediaInfo.AudioStreams.First();
+        conv = conv.AddStream(selectedAudio);
       }
       if (isDVDsubs) {
-        conv = conv.AddStream(mediaInfo.SubtitleStreams.First());
+        conv = conv.AddStream(selectedSubtitle);
       }
       WriteToLog(conv.Build());
       try {
@@ -371,6 +377,20 @@ namespace Gifer {
 
     private void fullResolutionCheck_CheckedChanged(object sender, EventArgs e) {
       Configuration.CustomFullResolution = fullResolutionCheck.Checked;
+    }
+
+    private void button1_Click(object sender, EventArgs e) {
+      PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
+      if (state.position == -1) {
+        return;
+      }
+      var result = Task.Run(async () => await FFmpeg.GetMediaInfo(state.filePath));
+      StreamSelector streamSelector = new StreamSelector(result.Result);
+      var formResult = streamSelector.ShowDialog();
+      if (formResult == DialogResult.OK) {
+        selectedAudio = streamSelector.GetSelectedAudio();
+        selectedSubtitle = streamSelector.GetSelectedSub();
+      }
     }
   }
 }

@@ -43,6 +43,7 @@
       this.SubtitesSize = new System.Windows.Forms.NumericUpDown();
       this.configHotkeysButton = new System.Windows.Forms.Button();
       this.customGifGroupBox = new System.Windows.Forms.GroupBox();
+      this.selectStreamsButton = new System.Windows.Forms.Button();
       this.fullResolutionCheck = new System.Windows.Forms.CheckBox();
       this.keepSubsCheck = new System.Windows.Forms.CheckBox();
       this.keepAudioCheck = new System.Windows.Forms.CheckBox();
@@ -189,6 +190,7 @@
       // 
       // customGifGroupBox
       // 
+      this.customGifGroupBox.Controls.Add(this.selectStreamsButton);
       this.customGifGroupBox.Controls.Add(this.fullResolutionCheck);
       this.customGifGroupBox.Controls.Add(this.keepSubsCheck);
       this.customGifGroupBox.Controls.Add(this.keepAudioCheck);
@@ -200,6 +202,16 @@
       this.customGifGroupBox.TabIndex = 7;
       this.customGifGroupBox.TabStop = false;
       this.customGifGroupBox.Text = "Custom Gif settings";
+      // 
+      // selectStreamsButton
+      // 
+      this.selectStreamsButton.Location = new System.Drawing.Point(17, 204);
+      this.selectStreamsButton.Name = "selectStreamsButton";
+      this.selectStreamsButton.Size = new System.Drawing.Size(289, 51);
+      this.selectStreamsButton.TabIndex = 3;
+      this.selectStreamsButton.Text = "Select streams";
+      this.selectStreamsButton.UseVisualStyleBackColor = true;
+      this.selectStreamsButton.Click += new System.EventHandler(this.button1_Click);
       // 
       // fullResolutionCheck
       // 
@@ -286,6 +298,7 @@
         private System.Windows.Forms.CheckBox fullResolutionCheck;
         private System.Windows.Forms.CheckBox keepSubsCheck;
         private System.Windows.Forms.CheckBox keepAudioCheck;
+    private System.Windows.Forms.Button selectStreamsButton;
   }
 }
 
