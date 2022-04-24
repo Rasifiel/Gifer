@@ -10,13 +10,7 @@ using System.Windows.Forms;
 
 namespace Gifer {
   public partial class NotificationWindow : Form {
-
-    private class NotificationMessage {
-
-
-      public NotificationMessage() {
-      }
-    }
+    protected override bool ShowWithoutActivation => true;
 
     Timer timer;
     PriorityQueue<Label, DateTime> priorityQueue = new PriorityQueue<Label, DateTime>();
