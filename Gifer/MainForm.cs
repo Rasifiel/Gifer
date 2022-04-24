@@ -92,10 +92,16 @@ namespace Gifer {
       var subpath = Path.ChangeExtension(Path.GetTempFileName(), "ass");
       var escapedPath = subpath.Replace("\\", "\\\\").Replace(":", "\\:").Replace("[","\\[").Replace("]","\\]");
       var mediaInfo = await FFmpeg.GetMediaInfo(filePath);
+      bool isDVDsubs = false;
       if (subtitles) {
-        var subconv = FFmpeg.Conversions.New().AddStream(mediaInfo.SubtitleStreams.First()).SetOutput(subpath);
-        WriteToLog(subconv.Build());
-        await subconv.Start();
+        if (mediaInfo.SubtitleStreams.First().Codec == "dvd_subtitle") {
+          isDVDsubs = true;
+        }
+        else {
+          var subconv = FFmpeg.Conversions.New().AddStream(mediaInfo.SubtitleStreams.First()).SetOutput(subpath);
+          WriteToLog(subconv.Build());
+          await subconv.Start();
+        }
       }
       var videoStream = mediaInfo.VideoStreams.First();
       var fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -105,6 +111,7 @@ namespace Gifer {
       var resizeVf = "scale=iw*sar:ih, scale='min(800,ceil(iw/2)*2)':-2";
       var roundVf = "pad=ceil(iw/2)*2:ceil(ih/2)*2";
       var subtitlesVf = $"subtitles='{escapedPath}':force_style='FontName=Open Sans Semibold,FontSize={Configuration.SubtitlesSize},PrimaryColour=&H00FFFFFF,Bold=1'";
+      var dvdSubsVf = $"scale[vidi];[sub][vidi]scale2ref[subrs][vidio];[vidio][subrs]overlay;[0:s]fps=fps={videoStream.Framerate}[sub]";
       var vfs = new List<String>();
       if (additionalFilter != null) {
         vfs.AddRange(additionalFilter);
@@ -115,15 +122,23 @@ namespace Gifer {
         vfs.Add(roundVf);
       }
       if (subtitles) {
-        vfs.Add(subtitlesVf);
+        if (isDVDsubs) {
+          vfs.Add(dvdSubsVf);
+        }
+        else {
+          vfs.Add(subtitlesVf);
+        }
       }
       var crf = Configuration.CRF;
       var conv = new Conversion().AddStream(videoStream).AddParameter($"-ss {from}ms -to {to}ms -copyts", ParameterPosition.PreInput)
         .SetPixelFormat(PixelFormat.yuv420p)
-        .AddParameter($"-vf \"{BuildVF(vfs)}\" -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
+        .AddParameter($"-filter_complex \"[0:v]{BuildVF(vfs)}\" -map -0:s -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
         .SetOutput(resultPath).SetOverwriteOutput(true);
       if (keepAudio) {
         conv = conv.AddStream(mediaInfo.AudioStreams.First());
+      }
+      if (isDVDsubs) {
+        conv = conv.AddStream(mediaInfo.SubtitleStreams.First());
       }
       WriteToLog(conv.Build());
       try {
