@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10 2022-04-24
+
+### Fixed
+- DVD subtitles should work correctly on any locale.
+- Notification window will not grab input focus (for real this time).
+
 ## 1.9 2022-04-24
 
 ### Added
