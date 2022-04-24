@@ -11,11 +11,13 @@ using System.Windows.Forms;
 namespace Gifer {
   public partial class NotificationWindow : Form {
     protected override bool ShowWithoutActivation => true;
+    int WS_EX_NOACTIVATE = 0x08000000;
+    int WS_EX_TOOLWINDOW = 0x00000080;
     protected override CreateParams CreateParams {
       get {
         CreateParams cp = base.CreateParams;
         // turn on WS_EX_TOOLWINDOW style bit
-        cp.ExStyle |= 0x80;
+        cp.ExStyle |= WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
         return cp;
       }
     }
