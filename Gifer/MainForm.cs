@@ -1,6 +1,5 @@
 ﻿using AutoUpdaterDotNET;
 using log4net;
-using Microsoft.Toolkit.Uwp.Notifications;
 using NHotkey;
 using NHotkey.WindowsForms;
 using System;
