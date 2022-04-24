@@ -11,12 +11,22 @@ using System.Windows.Forms;
 namespace Gifer {
   public partial class NotificationWindow : Form {
     protected override bool ShowWithoutActivation => true;
+    protected override CreateParams CreateParams {
+      get {
+        CreateParams cp = base.CreateParams;
+        // turn on WS_EX_TOOLWINDOW style bit
+        cp.ExStyle |= 0x80;
+        return cp;
+      }
+    }
 
     Timer timer;
     PriorityQueue<Label, DateTime> priorityQueue = new PriorityQueue<Label, DateTime>();
     public NotificationWindow() {
       InitializeComponent();
       this.Visible = false;
+      this.FormBorderStyle = FormBorderStyle.None;
+      this.ShowInTaskbar = false;
       timer = new Timer();
       timer.Interval = 100;
       timer.Tick += NotificationsCleaner;
