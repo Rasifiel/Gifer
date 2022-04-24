@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.9 2022-04-24
+
+### Added
+- Selection of input streams.
+- Support for DVD subtitles.
+
+### Fixed
+- Notification window will not grab input focus.
+- Notification window will not be shown in alt+tab selector.
+
 ## 1.8 2022-04-23
 
 ### Changed
