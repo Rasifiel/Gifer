@@ -18,7 +18,7 @@ if ($buildBinary) {
   if (!(Test-Path $ffmpegPath)) {
     New-Item -ItemType Directory -Path $ffmpegPath
   }
-  if ($forceFFmpegDownload || !(Test-Path $ffmpegPath\ffmpeg.exe)) {
+  if ($forceFFmpegDownload -or !(Test-Path $ffmpegPath\ffmpeg.exe)) {
     Invoke-WebRequest -Uri 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip' -OutFile $ffmpegPath\ffmpeg.zip
     Expand-Archive -LiteralPath "$ffmpegPath\ffmpeg.zip" -DestinationPath $ffmpegPath
     Copy-Item -Path "$ffmpeg\ffmpeg*\bin\ffmpeg.exe" -Destination $ffmpeg\

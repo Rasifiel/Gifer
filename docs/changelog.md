@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11 2022-06-07
+
+### Fixed
+- Crop dialog works correctly.
+
 ## 1.10 2022-04-24
 
 ### Fixed
