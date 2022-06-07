@@ -264,19 +264,14 @@ namespace Gifer {
       e.Handled = true;
     }
 
-    private void ShowCropDialog() {
+    async private void ShowCropDialog() {
       PlayerState state = VideoPlayerAPIFactory.CreateVideoPlayerAPI().GetPlayerState();
       if (state.position == -1) {
         ShowMessage(MessageType.Error, "Can't connect to video player");
         return;
       }
       String screenPath = Path.ChangeExtension(Path.GetTempFileName(), "png");
-      var snapshotConv = FFmpeg.Conversions.FromSnippet.Snapshot(state.filePath, screenPath, TimeSpan.FromMilliseconds(state.position));
-      snapshotConv.Wait();
-      if (!snapshotConv.IsCompleted) {
-        ShowMessage(MessageType.Error, "Getting screenshot failed");
-        return;
-      }
+      await ScreenShot(state, screenPath);
       var image = Image.FromFile(screenPath);
       imageCropDialog.imageCropBox.Image = image;
       imageCropDialog.imageCropBox.SelectNone();
@@ -286,14 +281,22 @@ namespace Gifer {
       double maxScale = Math.Max(wScale, hScale);
       if (maxScale <= 1.0) {
         imageCropDialog.Size = image.Size;
-      } else {
+      }
+      else {
         imageCropDialog.Width = (int)(image.Width / maxScale);
         imageCropDialog.Height = (int)(image.Height / maxScale);
       }
       if (imageCropDialog.ShowDialog() == DialogResult.Cancel) { return; }
       var region = imageCropDialog.imageCropBox.SelectionRegion;
       String crop = String.Format("crop={0}:{1}:{2}:{3}", (int)region.Width, (int)region.Height, (int)region.X, (int)region.Y);
-      CutGif(start, end, fileName, new []{ crop });
+      CutGif(start, end, fileName, new[] { crop });
+    }
+
+    async private static Task<IConversionResult> ScreenShot(PlayerState state, string screenPath) {
+      var mediaInfo = await FFmpeg.GetMediaInfo(state.filePath);
+      var stream = mediaInfo.VideoStreams.FirstOrDefault().SetOutputFramesCount(1).SetSeek(TimeSpan.FromMilliseconds(state.position));
+      var conv = new Conversion().AddStream(stream).SetOutput(screenPath);
+      return await conv.Start();
     }
 
     private void ShowPadDialog() {
