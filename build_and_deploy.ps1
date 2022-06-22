@@ -6,6 +6,7 @@ param(
   [switch]$forceFFmpegDownload,
   [switch]$defaultDeploy
 )
+$outputencoding=[console]::outputencoding=[text.encoding]::utf8
 $projectPath = 'C:\Users\Rasifiel\source\repos\Gifer'
 $solutionPath = "$projectPath\Gifer.sln"
 $ffmpegPath = "$projectPath\ffmpeg"
