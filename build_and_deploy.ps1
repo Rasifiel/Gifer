@@ -11,6 +11,7 @@ $projectPath = 'C:\Users\Rasifiel\source\repos\Gifer'
 $solutionPath = "$projectPath\Gifer.sln"
 $ffmpegPath = "$projectPath\ffmpeg"
 $releaseDir = "$projectPath\Gifer\bin\Release"
+$version = ForEach-Object { Get-Content $projectPath\Gifer\MainForm.cs | Select-String -Pattern 'AutoUpdater.InstalledVersion = new Version\(\"(.+)\"\)' | ForEach-Object { "$($_.matches.groups[1])" } }
 if ($buildBinary) {
   msbuild $solutionPath -p:Configuration=Release -t:Rebuild
   if ($LastExitCode -ne 0) {
@@ -24,7 +25,6 @@ if ($buildBinary) {
     Expand-Archive -LiteralPath "$ffmpegPath\ffmpeg.zip" -DestinationPath $ffmpegPath
     Copy-Item -Path "$ffmpeg\ffmpeg*\bin\ffmpeg.exe" -Destination $ffmpeg\
   }
-  $version = ForEach-Object { Get-Content $projectPath\Gifer\MainForm.cs | Select-String -Pattern 'AutoUpdater.InstalledVersion = new Version\(\"(.+)\"\)' | ForEach-Object { "$($_.matches.groups[1])" } }
   $xml = @"
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
