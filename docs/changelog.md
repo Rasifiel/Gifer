@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.12 2022-08-22
+
+### Changed
+- Subtitles font size replaces with subtitles scaling.
+
 ## 1.11 2022-06-07
 
 ### Fixed
