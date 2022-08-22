@@ -57,7 +57,7 @@ namespace Gifer {
     NotificationWindow notificationWindow;
 
     public MainForm() {
-      AutoUpdater.InstalledVersion = new Version("1.12");
+      AutoUpdater.InstalledVersion = new Version("1.13");
       AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       InitializeComponent();
       RegisterHotkeys(Configuration.KeyConfig);
@@ -328,7 +328,7 @@ namespace Gifer {
         VLCRadioButton.Checked = true;
       }
       CRFValue.Value = Configuration.CRF;
-      SubtitesSize.Value = Configuration.SubtitlesSize;
+      SubtitesSize.Value = Configuration.SubtitlesScale;
       keepAudioCheck.Checked = Configuration.CustomKeepAudio;
       keepSubsCheck.Checked = Configuration.CustomKeepSubs;
       fullResolutionCheck.Checked = Configuration.CustomFullResolution;

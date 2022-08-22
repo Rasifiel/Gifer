@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.13 2022-08-22
+
+### Fixed
+- Crash of app initialization.
+
 ## 1.12 2022-08-22
 
 ### Changed
