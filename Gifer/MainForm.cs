@@ -56,8 +56,13 @@ namespace Gifer {
 
     NotificationWindow notificationWindow;
 
+    private void ExitFromApp() {
+      Application.Exit();
+    }
+
     public MainForm() {
       AutoUpdater.InstalledVersion = new Version("1.13");
+      AutoUpdater.ApplicationExitEvent += ExitFromApp;
       AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
       InitializeComponent();
       RegisterHotkeys(Configuration.KeyConfig);
