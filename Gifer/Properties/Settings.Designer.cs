@@ -130,5 +130,17 @@ namespace Gifer.Properties {
                 this["CustomFullResolution"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public decimal SubtitlesScale {
+            get {
+                return ((decimal)(this["SubtitlesScale"]));
+            }
+            set {
+                this["SubtitlesScale"] = value;
+            }
+        }
     }
 }

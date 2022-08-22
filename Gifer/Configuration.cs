@@ -38,6 +38,13 @@ namespace Gifer {
       set { Properties.Settings.Default.SubtitlesSize = value; Properties.Settings.Default.Save(); }
     }
 
+    public static decimal SubtitlesScale {
+      get {
+        return Properties.Settings.Default.SubtitlesScale;
+      }
+      set { Properties.Settings.Default.SubtitlesScale = value; Properties.Settings.Default.Save(); }
+    }
+
     public static Dictionary<GiferActionId, Keys> KeyConfig {
       get {
         var defaultConfig = DefaultGiferActions.BuildDefaultActions();

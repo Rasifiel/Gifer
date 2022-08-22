@@ -152,20 +152,31 @@
       this.label2.Location = new System.Drawing.Point(30, 284);
       this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(153, 32);
+      this.label2.Size = new System.Drawing.Size(165, 32);
       this.label2.TabIndex = 4;
-      this.label2.Text = "Subtitles size";
+      this.label2.Text = "Subtitles scale";
       this.crfToolTip.SetToolTip(this.label2, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
       // 
       // SubtitesSize
       // 
+      this.SubtitesSize.DecimalPlaces = 1;
+      this.SubtitesSize.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
       this.SubtitesSize.Location = new System.Drawing.Point(28, 320);
       this.SubtitesSize.Margin = new System.Windows.Forms.Padding(4);
-      this.SubtitesSize.Minimum = new decimal(new int[] {
-            5,
+      this.SubtitesSize.Maximum = new decimal(new int[] {
+            10,
             0,
             0,
             0});
+      this.SubtitesSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
       this.SubtitesSize.Name = "SubtitesSize";
       this.SubtitesSize.Size = new System.Drawing.Size(217, 39);
       this.SubtitesSize.TabIndex = 5;

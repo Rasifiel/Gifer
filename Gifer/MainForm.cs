@@ -115,7 +115,7 @@ namespace Gifer {
       var resultPath = Path.Combine(videoPath, resultName);
       var resizeVf = "scale=iw*sar:ih, scale='min(800,ceil(iw/2)*2)':-2";
       var roundVf = "pad=ceil(iw/2)*2:ceil(ih/2)*2";
-      var subtitlesVf = $"subtitles='{escapedPath}':force_style='FontName=Open Sans Semibold,FontSize={Configuration.SubtitlesSize},PrimaryColour=&H00FFFFFF,Bold=1'";
+      var subtitlesVf = FormattableString.Invariant($"subtitles='{escapedPath}':original_size={videoStream.Width}x{videoStream.Height}:force_style='FontName=Open Sans Semibold,PrimaryColour=&H00FFFFFF,Bold=1,ScaleX={Configuration.SubtitlesScale:F1},ScaleY={Configuration.SubtitlesScale:F1}'");
       var vfs = new List<String>();
       if (additionalFilter != null) {
         vfs.AddRange(additionalFilter);
@@ -350,7 +350,7 @@ namespace Gifer {
     }
 
     private void numericUpDown1_ValueChanged(object sender, EventArgs e) {
-      Configuration.SubtitlesSize = (int)SubtitesSize.Value;
+      Configuration.SubtitlesScale = SubtitesSize.Value;
     }
 
     private void configHotkeysButton_Click(object sender, EventArgs e) {
