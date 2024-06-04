@@ -76,7 +76,7 @@ namespace Gifer {
 
         public MainForm()
         {
-            AutoUpdater.InstalledVersion = new Version("1.13");
+            AutoUpdater.InstalledVersion = new Version("1.14");
             AutoUpdater.ApplicationExitEvent += ExitFromApp;
             AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
             InitializeComponent();

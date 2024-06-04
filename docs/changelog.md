@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.14 2024-06-04
+
+### Added
+- Button "Download FFmpeg". It will download shared binary version of FFmpeg to app folder.
+
 ## 1.13 2022-08-22
 
 ### Fixed

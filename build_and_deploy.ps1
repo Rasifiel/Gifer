@@ -7,7 +7,7 @@ param(
   [switch]$defaultDeploy
 )
 $outputencoding=[console]::outputencoding=[text.encoding]::utf8
-$projectPath = 'C:\Users\Rasifiel\source\repos\Gifer'
+$projectPath = "$env:userprofile\source\repos\Gifer"
 $solutionPath = "$projectPath\Gifer.sln"
 $ffmpegPath = "$projectPath\ffmpeg"
 $releaseDir = "$projectPath\Gifer\bin\Release"
@@ -23,7 +23,8 @@ if ($buildBinary) {
   if ($forceFFmpegDownload -or !(Test-Path $ffmpegPath\ffmpeg.exe)) {
     Invoke-WebRequest -Uri 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip' -OutFile $ffmpegPath\ffmpeg.zip
     Expand-Archive -LiteralPath "$ffmpegPath\ffmpeg.zip" -DestinationPath $ffmpegPath
-    Copy-Item -Path "$ffmpeg\ffmpeg*\bin\ffmpeg.exe" -Destination $ffmpeg\
+    Copy-Item -Path "$ffmpegPath\ffmpeg*\bin\ffmpeg.exe" -Destination $ffmpegPath\
+    Copy-Item -Path "$ffmpegPath\ffmpeg*\bin\ffprobe.exe" -Destination $ffmpegPath\
   }
   $xml = @"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -44,11 +45,12 @@ if ($buildBinary) {
   $copy = @{
     Path        = "$releaseDir\*"
     Include     = '*.dll', '*.exe', '*.xml', 'Gifer.*'
-    Exclude     = 'ffmpeg.exe'
+    Exclude     = 'ffmpeg.exe', 'ffprobe.exe'
     Destination = "$path\gifer"
   }
   Copy-Item @copy
   Copy-Item -Path $ffmpegPath\ffmpeg.exe -Destination "$path\gifer"
+  Copy-Item -Path $ffmpegPath\ffprobe.exe -Destination "$path\gifer"
   $releasePath = "$path\gifer-$version.zip"
   $compress = @{
     Path             = "$path\gifer\*.*"
