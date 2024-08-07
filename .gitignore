@@ -344,3 +344,5 @@ healthchecksdb
 *.clef
 /changelog.html
 *.html
+
+release

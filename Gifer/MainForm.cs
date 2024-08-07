@@ -76,7 +76,7 @@ namespace Gifer {
 
         public MainForm()
         {
-            AutoUpdater.InstalledVersion = new Version("1.14");
+            AutoUpdater.InstalledVersion = new Version("1.15");
             AutoUpdater.ApplicationExitEvent += ExitFromApp;
             AutoUpdater.Start("https://katou.moe/gifer/manifest.xml");
             InitializeComponent();
@@ -174,7 +174,7 @@ namespace Gifer {
             var crf = Configuration.CRF;
             var conv = new Conversion().AddStream(videoStream).AddParameter($"-ss {from}ms -to {to}ms -copyts", ParameterPosition.PreInput)
               .SetPixelFormat(PixelFormat.yuv420p)
-              .AddParameter($"-filter_complex \"[0:v]{BuildVF(vfs)}\" -map -0:s -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
+              .AddParameter($"-filter_complex \"[0:v]{BuildVF(vfs)}[vresult]\" -map -0:v -map \"[vresult]\" -map -0:s -c:v libx264 -crf {crf} -profile:v baseline -ss {from}ms")
               .SetOutput(resultPath).SetOverwriteOutput(true);
             if (keepAudio)
             {
