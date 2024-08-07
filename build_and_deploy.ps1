@@ -4,7 +4,8 @@ param(
   [switch]$upload,
   [switch]$createRelease,
   [switch]$forceFFmpegDownload,
-  [switch]$defaultDeploy
+  [switch]$defaultDeploy,
+  [switch]$local
 )
 $outputencoding=[console]::outputencoding=[text.encoding]::utf8
 $projectPath = "$env:userprofile\source\repos\Gifer"
@@ -35,16 +36,22 @@ if ($buildBinary) {
 	<mandatory>false</mandatory>
 </item>
 "@
-  $tempDir = [System.IO.Path]::GetTempPath()
-  $random = [System.IO.Path]::GetRandomFileName()
-  $path = (Join-Path $tempDir $random)
+  $path = "$projectPath\build"
+  if (!$local) {
+    $tempDir = [System.IO.Path]::GetTempPath()
+    $random = [System.IO.Path]::GetRandomFileName()
+    $path = (Join-Path $tempDir $random)
+  } else {
+    Remove-Item -Recurse $path
+  }
   New-Item -ItemType Directory -Path $path
   New-Item -ItemType Directory -Path "$path\gifer"
   $manifestPath = "$path\manifest.xml"
   Write-Output $xml > $manifestPath
   $copy = @{
+    Recurse     = $true
+    Include     = '*.dll', '*.exe', '*.xml', 'Gifer.*', 'runtimes*'
     Path        = "$releaseDir\*"
-    Include     = '*.dll', '*.exe', '*.xml', 'Gifer.*'
     Exclude     = 'ffmpeg.exe', 'ffprobe.exe'
     Destination = "$path\gifer"
   }
