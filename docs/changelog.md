@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.15 2024-08-07
+
+### Fixed
+- Double video stream creation with newer FFmpeg version.
+- Typo in Download FFmpeg button text.
+
 ## 1.14 2024-06-04
 
 ### Added
