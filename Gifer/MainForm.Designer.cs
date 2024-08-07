@@ -61,6 +61,7 @@
       this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
       this.trayIcon.Text = "Gifer";
       this.trayIcon.Visible = true;
+      this.trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.trayIcon_MouseDoubleClick);
       // 
       // trayMenu
       // 
@@ -75,6 +76,7 @@
       this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
       this.quitToolStripMenuItem.Size = new System.Drawing.Size(134, 38);
       this.quitToolStripMenuItem.Text = "Quit";
+      this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
       // 
       // groupBox1
       // 
@@ -274,6 +276,8 @@
       this.Name = "MainForm";
       this.ShowIcon = false;
       this.Text = "Gifer";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+      this.Load += new System.EventHandler(this.MainForm_Load);
       this.trayMenu.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();

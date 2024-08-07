@@ -78,10 +78,8 @@ if ($upload) {
     scp $manifestPath giferdeploy@katou.moe:/var/www/gifer
   }
   if ($buildDocs) {
+    git commit -m 'README.md file update' README.md
+    git push
     scp *.html giferdeploy@katou.moe:/var/www/gifer
   }
-}
-if ($buildDocs) {
-  git commit -m 'README.md file update' README.md
-  git push
 }
