@@ -97,6 +97,7 @@
       this.VLCRadioButton.TabStop = true;
       this.VLCRadioButton.Text = "VLC";
       this.VLCRadioButton.UseVisualStyleBackColor = true;
+      this.VLCRadioButton.CheckedChanged += new System.EventHandler(this.VLCRadioButton_CheckedChanged);
       // 
       // MPCRadioButton
       // 
@@ -108,6 +109,7 @@
       this.MPCRadioButton.TabStop = true;
       this.MPCRadioButton.Text = "MPC";
       this.MPCRadioButton.UseVisualStyleBackColor = true;
+      this.MPCRadioButton.CheckedChanged += new System.EventHandler(this.MPCRadioButton_CheckedChanged);
       // 
       // CRFValue
       // 
@@ -121,6 +123,7 @@
       this.CRFValue.Size = new System.Drawing.Size(218, 39);
       this.CRFValue.TabIndex = 2;
       this.crfToolTip.SetToolTip(this.CRFValue, "Constant Rate Factor: 0 - lossless 51 - lowest quality 28 - default");
+      this.CRFValue.ValueChanged += new System.EventHandler(this.CRFValue_ValueChanged);
       // 
       // label1
       // 
@@ -174,6 +177,7 @@
             0,
             0,
             0});
+      this.SubtitesSize.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
       // 
       // configHotkeysButton
       // 
@@ -184,6 +188,7 @@
       this.configHotkeysButton.TabIndex = 6;
       this.configHotkeysButton.Text = "Config hotkeys";
       this.configHotkeysButton.UseVisualStyleBackColor = true;
+      this.configHotkeysButton.Click += new System.EventHandler(this.configHotkeysButton_Click);
       // 
       // customGifGroupBox
       // 
@@ -206,6 +211,7 @@
       this.selectStreamsButton.TabIndex = 3;
       this.selectStreamsButton.Text = "Select streams";
       this.selectStreamsButton.UseVisualStyleBackColor = true;
+      this.selectStreamsButton.Click += new System.EventHandler(this.button1_Click);
       // 
       // fullResolutionCheck
       // 
@@ -216,6 +222,7 @@
       this.fullResolutionCheck.TabIndex = 2;
       this.fullResolutionCheck.Text = "Full resolution";
       this.fullResolutionCheck.UseVisualStyleBackColor = true;
+      this.fullResolutionCheck.Click += new System.EventHandler(this.fullResolutionCheck_CheckedChanged);
       // 
       // keepSubsCheck
       // 
@@ -226,6 +233,7 @@
       this.keepSubsCheck.TabIndex = 1;
       this.keepSubsCheck.Text = "Keep subs";
       this.keepSubsCheck.UseVisualStyleBackColor = true;
+      this.keepSubsCheck.Click += new System.EventHandler(this.keepSubsCheck_CheckedChanged);
       // 
       // keepAudioCheck
       // 
@@ -236,6 +244,7 @@
       this.keepAudioCheck.TabIndex = 0;
       this.keepAudioCheck.Text = "Keep audio";
       this.keepAudioCheck.UseVisualStyleBackColor = true;
+      this.keepAudioCheck.Click += new System.EventHandler(this.keepAudioCheck_CheckedChanged);
       // 
       // BtnDnldFFmpeg
       // 
@@ -245,6 +254,7 @@
       this.BtnDnldFFmpeg.TabIndex = 4;
       this.BtnDnldFFmpeg.Text = "Download FFmpeg";
       this.BtnDnldFFmpeg.UseVisualStyleBackColor = true;
+      this.BtnDnldFFmpeg.Click += new System.EventHandler(this.button1_Click_1);
       // 
       // MainForm
       // 
