@@ -65,7 +65,6 @@ if ($buildBinary) {
     DestinationPath  = "$releasePath"
   }
   Compress-Archive @compress
-  Copy-Item -Path $releasePath -Destination 'release'
 }
 if ($buildDocs) {
   Get-Content -Raw .\docs\changelog.md | pandoc -s -t html -o changelog.html --metadata title="Changelog"
