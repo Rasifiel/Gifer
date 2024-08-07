@@ -1,6 +1,6 @@
-# Gifer - tool to create "gifs" from your video player.
+﻿# Gifer - tool to create "gifs" from your video player.
 ## Download
-[Download Gifer 1.15](https://katou.moe/gifer/gifer-1.15.zip).  
+[Download Gifer 1.16](https://katou.moe/gifer/gifer-1.16.zip).  
 [Changelog](https://katou.moe/gifer/changelog.html).
 
 ## Compatibility
