@@ -24,7 +24,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - uses: ZacJW/markdown-html-action@1.1.0
+      - uses: ZacJW/markdown-html-action@1.2.0
         with:
           input_files: '[["docs/changelog.md"]]'
           output_files: '["docs/changelog.html"]'
