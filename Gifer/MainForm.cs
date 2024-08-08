@@ -102,6 +102,16 @@ namespace Gifer {
 
         async private void CutGif(int from, int to, String filePath, String[] additionalFilter = null, bool subtitles = false, bool fullResolution = false, bool keepAudio = false)
         {
+            if (selectedSubtitle != null) {
+                if (selectedSubtitle.Path.Trim('"') != filePath) {
+                    selectedSubtitle = null;
+                }
+            }
+            if (selectedAudio != null) {
+                if (selectedAudio.Path.Trim('"') != filePath) {
+                    selectedAudio = null;
+                }
+            }
             if (from > to)
             {
                 int t = from;
