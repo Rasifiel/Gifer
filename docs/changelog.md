@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.19 2024-08-08
+
+### Fixed
+- Gifer uses proper source file for subtiteles. Fixed issue with stuck subtitle source when changing video file.
+
+## 1.16-1.18 2024-08-07
+
+### Fixed
+- Fixed borked UI code and release.
+
 ## 1.15 2024-08-07
 
 ### Fixed
