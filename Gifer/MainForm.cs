@@ -138,7 +138,7 @@ namespace Gifer {
             }
             if (subtitles) {
                 if (isDVDsubs) {
-                    var dvdSubsVf = FormattableString.Invariant($"scale[vidi];[sub][vidi]scale2ref[subrs][vidio];[vidio][subrs]overlay;[0:{selectedSubtitle.Index}]fps=fps={videoStream.Framerate}[sub]");
+                    var dvdSubsVf = FormattableString.Invariant($"scale[vidi];[0:{selectedSubtitle.Index}]fps=fps={videoStream.Framerate}[sub];[sub][vidi]scale2ref[subrs][vidio];[vidio][subrs]overlay");
                     vfs.Add(dvdSubsVf);
                 } else {
                     vfs.Add(subtitlesVf);
