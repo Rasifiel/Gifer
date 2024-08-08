@@ -60,7 +60,7 @@ if ($buildBinary) {
   Copy-Item -Path $ffmpegPath\ffprobe.exe -Destination "$path\gifer"
   $releasePath = "$path\gifer-$version.zip"
   $compress = @{
-    Path             = "$path\gifer\*.*"
+    Path             = "$path\gifer\*"
     CompressionLevel = 'Fastest'
     DestinationPath  = "$releasePath"
   }
